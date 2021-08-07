@@ -1,0 +1,113 @@
+@blue: #3860F4;  
+@yellow: #FFBB20;
+@black: #374567;
+@orange:#FF6F00;
+@bc: #e4e4e4;
+@bc2:#f8faff;
+@fc:#606266;
+@ee:#eee;
+@fc1: #7A8BA6;
+@af: #7A8BA6;
+
+// 背景图片地址和大小
+.bis(@url,@color:transparent) {
+	background-color: @color;
+	background-image: url(@url);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+//定位全屏
+.allcover{
+	position:absolute;
+	top:0;
+	right:0;
+}
+
+//transform上下左右居中
+.ctt {  
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+//定位上下左右居中
+.ctp(@width, @height) {  
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    margin-top: -@height/2;
+    margin-left: -@width/2;
+}
+
+//定位上下居中
+.tb {  
+	position: absolute;
+	top: 50%;
+    transform: translateY(-50%);
+}
+
+//定位左右居中
+.lr {  
+	position: absolute;
+	left: 50%;
+    transform: translateX(-50%);
+}
+
+//宽高
+.wh(@width, @height){
+	width: @width;
+	height: @height;
+}
+
+//字体大小、行高、字体
+.ft(@size, @line-height) {  
+	font-size: @size;
+	line-height:@line-height;
+}
+
+//字体大小，颜色
+.sc(@size, @color){
+	font-size: @size;
+	color: @color;
+}
+
+//flex 布局和 子元素 对其方式
+.flexb(@type: space-between){
+	display: flex;
+	justify-content: @type;
+	align-items: center;
+}
+.flex(@type: flex-start){
+	display: flex;
+	justify-content: @type;
+}
+.flexc(){
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.bs() {
+	box-sizing: border-box;
+}
+.detail(@width, @hight) {
+	opacity: 0.8;
+	.wh(@width, @hight);
+	border-radius: 3px;
+	color: @blue;
+	border: 1px solid @blue;
+	box-sizing: border-box;
+	cursor: pointer;
+	text-align: center;
+	line-height: @hight;
+	&:hover {
+		color: #fff;
+		background-color: @blue;
+	}
+}
+.bigNumer(@size:30px, @color:@yellow, @weight:600) {
+	font-size: @size;
+	color:  @color;
+	font-weight: @weight
+}
+

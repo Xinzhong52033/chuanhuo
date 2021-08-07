@@ -1,0 +1,268 @@
+{
+  "id": "2686412",
+  "name": "川货供需对接平台",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "23391901",
+      "name": "路径 249",
+      "font_class": "a-lujing249",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "23391902",
+      "name": "组 306",
+      "font_class": "a-zu306",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "23391903",
+      "name": "路径 257",
+      "font_class": "a-lujing257",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "23386788",
+      "name": "组 303",
+      "font_class": "a-zu303",
+      "unicode": "e68e",
+      "unicode_decimal": 59022
+    },
+    {
+      "icon_id": "23386789",
+      "name": "路径 243",
+      "font_class": "a-lujing243",
+      "unicode": "e68f",
+      "unicode_decimal": 59023
+    },
+    {
+      "icon_id": "23283936",
+      "name": "星号",
+      "font_class": "xinghao",
+      "unicode": "e68d",
+      "unicode_decimal": 59021
+    },
+    {
+      "icon_id": "23283557",
+      "name": "置顶",
+      "font_class": "zhiding",
+      "unicode": "e68c",
+      "unicode_decimal": 59020
+    },
+    {
+      "icon_id": "23283187",
+      "name": "定位",
+      "font_class": "dingwei1",
+      "unicode": "e67f",
+      "unicode_decimal": 59007
+    },
+    {
+      "icon_id": "23283188",
+      "name": "建筑",
+      "font_class": "jianzhu",
+      "unicode": "e680",
+      "unicode_decimal": 59008
+    },
+    {
+      "icon_id": "23283189",
+      "name": "企业",
+      "font_class": "qiye",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
+      "icon_id": "23283190",
+      "name": "仓库",
+      "font_class": "cangku",
+      "unicode": "e682",
+      "unicode_decimal": 59010
+    },
+    {
+      "icon_id": "23283191",
+      "name": "下架",
+      "font_class": "xiajia",
+      "unicode": "e683",
+      "unicode_decimal": 59011
+    },
+    {
+      "icon_id": "23283192",
+      "name": "用户",
+      "font_class": "yonghu",
+      "unicode": "e684",
+      "unicode_decimal": 59012
+    },
+    {
+      "icon_id": "23283193",
+      "name": "组 1349",
+      "font_class": "a-zu1349",
+      "unicode": "e685",
+      "unicode_decimal": 59013
+    },
+    {
+      "icon_id": "23283194",
+      "name": "园区",
+      "font_class": "yuanqu",
+      "unicode": "e686",
+      "unicode_decimal": 59014
+    },
+    {
+      "icon_id": "23283195",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "e687",
+      "unicode_decimal": 59015
+    },
+    {
+      "icon_id": "23283196",
+      "name": "组 1351",
+      "font_class": "a-zu1351",
+      "unicode": "e688",
+      "unicode_decimal": 59016
+    },
+    {
+      "icon_id": "23283197",
+      "name": "组 1350",
+      "font_class": "a-zu1350",
+      "unicode": "e689",
+      "unicode_decimal": 59017
+    },
+    {
+      "icon_id": "23283198",
+      "name": "详情",
+      "font_class": "xiangqing",
+      "unicode": "e68a",
+      "unicode_decimal": 59018
+    },
+    {
+      "icon_id": "23283199",
+      "name": "编辑",
+      "font_class": "bianji",
+      "unicode": "e68b",
+      "unicode_decimal": 59019
+    },
+    {
+      "icon_id": "23146332",
+      "name": "组 1343",
+      "font_class": "a-zu1343",
+      "unicode": "e67e",
+      "unicode_decimal": 59006
+    },
+    {
+      "icon_id": "22987927",
+      "name": "定位",
+      "font_class": "dingwei",
+      "unicode": "e67b",
+      "unicode_decimal": 59003
+    },
+    {
+      "icon_id": "22987928",
+      "name": "邮箱",
+      "font_class": "youxiang",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "22987929",
+      "name": "电话",
+      "font_class": "dianhua",
+      "unicode": "e67d",
+      "unicode_decimal": 59005
+    },
+    {
+      "icon_id": "22986477",
+      "name": "品牌bg",
+      "font_class": "pinpaibg",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
+      "icon_id": "22986414",
+      "name": "收拢",
+      "font_class": "shoulong",
+      "unicode": "e679",
+      "unicode_decimal": 59001
+    },
+    {
+      "icon_id": "22986263",
+      "name": "title",
+      "font_class": "title",
+      "unicode": "e66e",
+      "unicode_decimal": 58990
+    },
+    {
+      "icon_id": "22986264",
+      "name": "化工",
+      "font_class": "huagong",
+      "unicode": "e66f",
+      "unicode_decimal": 58991
+    },
+    {
+      "icon_id": "22986265",
+      "name": "建材",
+      "font_class": "jiancai",
+      "unicode": "e670",
+      "unicode_decimal": 58992
+    },
+    {
+      "icon_id": "22986266",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e671",
+      "unicode_decimal": 58993
+    },
+    {
+      "icon_id": "22986267",
+      "name": "展开",
+      "font_class": "zhankai",
+      "unicode": "e672",
+      "unicode_decimal": 58994
+    },
+    {
+      "icon_id": "22986268",
+      "name": "展开2",
+      "font_class": "zhankai2",
+      "unicode": "e673",
+      "unicode_decimal": 58995
+    },
+    {
+      "icon_id": "22986269",
+      "name": "金属",
+      "font_class": "jinshu",
+      "unicode": "e674",
+      "unicode_decimal": 58996
+    },
+    {
+      "icon_id": "22986270",
+      "name": "能源",
+      "font_class": "nengyuan",
+      "unicode": "e675",
+      "unicode_decimal": 58997
+    },
+    {
+      "icon_id": "22986271",
+      "name": "品牌",
+      "font_class": "pinpai",
+      "unicode": "e676",
+      "unicode_decimal": 58998
+    },
+    {
+      "icon_id": "22986272",
+      "name": "品类",
+      "font_class": "pinlei",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
+      "icon_id": "22986273",
+      "name": "农副",
+      "font_class": "nongfu",
+      "unicode": "e678",
+      "unicode_decimal": 59000
+    }
+  ]
+}
