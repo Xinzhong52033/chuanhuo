@@ -4,7 +4,7 @@ const baseSize = 75
 function setRem () {
   let scale = document.documentElement.clientWidth / 1920
   if (document.documentElement.clientWidth > 1920) {
-     scale = 1
+    //  scale = 1
   }
   // 设置页面根节点字体大小
   document.documentElement.style.fontSize = baseSize * Math.min(scale, 2) + 'px'

@@ -174,6 +174,8 @@ export default {
     },
     data() {
         return {
+            commodityId: this.$route.query.commodityId || '1',
+            goodData: {},
             goodsImg: [
                 require("../../../../assets/img/goods1.jpg"),
                 require("../../../../assets/img/goods2.jpg"),
@@ -294,6 +296,9 @@ export default {
             ],
         };
     },
+    created() {
+        this.getGoodDetail(this.commodityId)
+    },
     methods: {
         company() {
             var newPage = this.$router.resolve({
@@ -302,6 +307,10 @@ export default {
             });
             window.open(newPage.href, "_blank");
         },
+        async getGoodDetail(id) {
+            let {data} = await this.$api.getGoodDetail({commodityId: id})
+            this.goodData = data
+        }
     },
     computed: {
         defaultOption() {

@@ -107,7 +107,7 @@
                                                     <span>{{i.categoryName}}</span>
                                                     <div class="number" :class="i.zf==0?'number-down':''"><span v-if='i.zf == 1'>+ </span><span v-if='i.zf == 0'>- </span>{{i.increase}}%</div>
                                                 </div>
-                                                <div class="down">
+                                                <div class="down" style="background: transparent">
                                                     <span class="big-number">{{i.price}}</span><span> 元/吨</span>
                                                 </div>
                                             </div>
@@ -144,7 +144,7 @@
                         <div class="title">最新产品</div>
                         <div class="down-top">
                             <el-breadcrumb separator="|" class="breadcrumb">
-                                <el-breadcrumb-item v-for="j in item.latestList" :class="item.latest == j?'focus':''"><span @click="item.latest = j">{{j}}</span></el-breadcrumb-item>
+                                <el-breadcrumb-item v-for="j in item.latestList" :class="item.latest == j?'focus':''"><span @click="item.latest = j;getGoodSList(item.type)">{{j}}</span></el-breadcrumb-item>
                             </el-breadcrumb>
                             <span class="more" @click="toGood(item)">更多<i class="el-icon-arrow-right"></i></span>
                         </div>
@@ -159,8 +159,8 @@
                                         <span>{{item.commodityPrice}}</span> 元/吨
                                     </div>
                                     <div class="warehouse">
-                                        <div>仓库：{{item.park}}</div>
-                                        <div>供应商：{{item.provide}}</div>
+                                        <div>发货/自提仓库：{{item.warehouseName}}</div>
+                                        <div>供应商：{{item.supplierName}}</div>
                                     </div>
                                     <div class="detail" @click="goodDetail">查看详情</div>
                                 </li>
@@ -447,7 +447,14 @@ export default {
                     delay: 3000,
                 },
             },
-            cityList:[]
+            cityList:[],
+            typeMap:{
+                1: '农副',
+                2: '能源',
+                3: '金属',
+                4: '化工',
+                5: '建材',
+            }
         };
     },
     created() {
@@ -459,6 +466,7 @@ export default {
             this.getPrice(item.type)
             this.getStock(item.type)
             this.getProductType()
+            this.getGoodSList(item.type)
         });
     },
     methods: {
@@ -529,7 +537,7 @@ export default {
             let { data } = await this.$api.goodtype();
         },
         toGood(item) {
-            this.$router.push({path: '/goods', query: {firstLevel: item}})
+            this.$router.push({path: '/goods', query: {firstLevel: 111}})
             this.set_banerSelect('goods')
         },
         async selectCityList() {
@@ -573,18 +581,33 @@ export default {
             })
             this.form[type-1].stockDatas = data
             for (var key in data) {
-                this.form[type-1].stockList.push(key)  
+                this.form[type-1].stockList.push(key) 
             }
+            this.form[type-1].stockList.splice(4, this.form[type-1].stockList.length+1)
+            this.form[type-1].latestList = ['全部',...this.form[type-1].stockList]
             this.form[type-1].stock = this.form[type-1].stockList[0]
-             this.form[type-1].stockData = this.form[type-1].stockDatas[this.form[type-1].stockList[0]]
+            this.form[type-1].stockData = this.form[type-1].stockDatas[this.form[type-1].stockList[0]]
         },
         async getProductType(type) {
            let { data } = await this.$api.getProductType({
                 type: type,
             })
-            
         },
-        
+        async getGoodSList(type) {
+            let obj = {
+                pageNum: '1',
+                pageSize: '10',
+                productType: this.typeMap[type],
+                productTypeLevelTow: this.form[type-1].latest == '全部'?'':this.form[type-1].latest,
+                deliveryPlace: '',
+                brand:'',
+                supplier: '',
+                sort: 1,
+            }
+            let {data} = await this.$api.getGoodSList(obj)
+            this.form[type-1].latestData = data.list
+             this.form[type-1].latestData.splice(4, this.form[type-1].latestData.length+1)
+        },
     },
     computed: {
         defaultOption() {
@@ -840,6 +863,7 @@ export default {
                     .flexb();
                     .left {
                         .wh(630px, 100%);
+                        background-color: #fff;
                         &-top {
                             margin-top: 50px;
                             .wh(100%, 30px);
@@ -874,6 +898,7 @@ export default {
                         flex-direction: column;
                         &-up {
                             .wh(100%, 176px);
+                            background-color: #fff;
                             &-top {
                                 margin-top: 5px;
                                 margin-left: 132px;
@@ -929,6 +954,7 @@ export default {
                             }
                             .wh(100%, 186px);
                             .flexb();
+                            background-color: #fff;
                             &-left {
                                 .wh(450px, 100%);
                                 .flexb();
@@ -1015,6 +1041,7 @@ export default {
                 }
                 .down {
                     .wh(100%, 426px);
+                    background-color: #fff;
                     &-top {
                         .flexb();
                         .wh(100%, 26px);

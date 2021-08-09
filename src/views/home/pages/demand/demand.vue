@@ -2,14 +2,14 @@
     <div class="demand">
         <div class="padding-box">
             <div class="top">
-                <leftMenu :menuList='menuList' class="left-menu"></leftMenu>
+                <leftMenu ref="leftMenu" :menuList='menuList' @selectItem='selectItem' class="left-menu"></leftMenu>
                 <div class="right">
-                    <selfFilter :list='list.items'></selfFilter>
+                    <selfFilter :list='type' @selectlevelTwo="selectlevelTwo" ref="selfFilter"></selfFilter>
                 </div>
             </div>
-            <order class="order" :orderType="orderType"></order>
+            <order class="order" :select="select" :orderType="orderType" @selectOrder='()=>getGoodSList(1)'></order>
             <ul class="goodsList">
-                <li v-for="(item, index) in goodsList" :key="index">
+                <li v-for="(item, index) in list.items" :key="index">
                     <div class="item-top">
                         <div class="demand">
                             <div class="want big-black">
@@ -58,174 +58,155 @@ export default {
     components: {
         leftMenu,
         selfFilter,
-        Order,
+        order,
         pagenation
     },
     data() {
         return {
-            orderType: ['综合排序', '发布时间', '截止时间'],
+            orderType: ["综合排序", "库存", "价格"],
             order: 1,
             menuList: [
-                {name: "能源", value: '/personInfo'},
-                {name: "农副", value: '/personInfo'},
-                {name: "化工", value: '/personInfo'},
-                {name: "金属", value: '/personInfo'},
-                {name: "建材", value: '/personInfo'},
+                { name: "农副", categoryId: "1" },
+                { name: "能源", categoryId: "2" },
+                { name: "化工", categoryId: "3" },
+                { name: "金属", categoryId: "4" },
+                { name: "建材", categoryId: "5" },
             ],
             goodsList: [
-                {
-                    name: "求购沫煤",
-                    count: "200",
-                    price: "40,066",
-                    list: "4-2混沫煤、5号上层原沫煤",
-                    fabutime: "2021-05-27  16:00:00",
-                    endtime:"2021-06-10  16:00:00"
-                },
-                {
-                    name: "求购石脑油",
-                    count: "80",
-                    price: "364,586",
-                    list: "加氢石脑油",
-                    fabutime: "2021-05-06  16:00:00",
-                    endtime:"2021-08-10  16:00:00"
-                },
-                {
-                    name: "求购沥青",
-                    count: "50",
-                    price: "268,882",
-                    list: "重交沥青、70#",
-                    fabutime: "2021-05-27  16:00:00",
-                    endtime:"2021-06-10  16:00:00"
-                },
-                {
-                    name: "求购燃料油",
-                    count: "10",
-                    price: "50,091",
-                    list: "180CST",
-                    fabutime: "2021-05-27  16:00:00",
-                    endtime:"2021-06-10  16:00:00"
-                },
-                {
-                    name: "求购沫煤",
-                    count: "150",
-                    price: "42,066",
-                    list: "4-2混沫煤",
-                    fabutime: "2021-06-22  16:00:00",
-                    endtime:"2021-09-15  16:00:00"
-                },
-                {
-                    name: "求购石脑油",
-                    count: "75",
-                    price: "364,302",
-                    list: "加氢石脑油",
-                    fabutime: "2021-05-16  16:00:00",
-                    endtime:"2021-09-10  16:00:00"
-                },
-                {
-                    name: "求购沥青",
-                    count: "69",
-                    price: "26,395",
-                    list: "70#",
-                    fabutime: "2021-08-01  16:00:00",
-                    endtime:"2021-09-10  16:00:00"
-                },
-                {
-                    name: "求购燃料油",
-                    count: "23",
-                    price: "60,091",
-                    list: "180CST",
-                    fabutime: "2021-07-27  16:00:00",
-                    endtime:"2021-09-10  16:00:00"
-                },
             ],
             currentPage: 1,
             pageSize: 10,
+            type: [
+                {
+                    classification: "品类",
+                    items: [
+                    ],
+                    stateChange: false,
+                    state: true,
+                    select: "全部",
+                },
+                {
+                    classification: "发货地",
+                    items: [
+                    ],
+                    stateChange: false,
+                    state: true,
+                    select: "全部",
+                },
+                {
+                    classification: "品牌",
+                    items: [],
+                    stateChange: false,
+                    state: true,
+                    select: "全部",
+                },
+                {
+                    classification: "供应商",
+                    items: [
+                        
+                    ],
+                    stateChange: false,
+                    state: true,
+                    select: "全部",
+                },
+            ],
             select: {
-                currentPage: this.currentPage,
-                pageSize: this.pageSize,
+                pageNum: '',
+                pageSize: '',
+                productType: "农副",
+                productTypeLevelTow: '',
+                deliveryPlace:'',
+                brand:'',
+                supplier: '',
+                sort: "1",
             },
             list: {
                 total: 15,
                 currentPage: 1,
                 pageSize: 10,
-                items: [
-                    {
-                        classification: "品类",
-                        items: [
-                            '全部',
-                            '焦炭',
-                            '石焦油',
-                            '石脑油',
-                            '原油',
-                            '沥青',
-                            '原煤',
-                            '天然气',
-                            '液化气',
-                        ],
-                        stateChange: false,
-                        state: true,
-                        select: "全部",
-                    },
-                    {
-                        classification: "类型",
-                        items: [
-                            '全部',
-                            '现货/标准品',
-                            '加工/定制品'
-                        ],
-                        stateChange: false,
-                        state: true,
-                        select: "全部",
-                    },
-                    {
-                        classification: "贸易类型",
-                        items: [
-                            '全部',
-                            '内贸',
-                            '外贸', 
-                        ],
-                        stateChange: false,
-                        state: true,
-                        select: "全部",
-                    },
-                    {
-                        classification: "采购类型",
-                        items: [
-                            "全部",
-                            "单次采购",
-                            "协议采购（长期采购）",
-                        ],
-                        stateChange: false,
-                        state: true,
-                        select: "全部",
-                    },
-                     {
-                        classification: "价格说明",
-                        items: [
-                            "全部",
-                            "可议价",
-                            "不可议价",
-                            "面议",
-                        ],
-                        stateChange: false,
-                        state: true,
-                        select: "全部",
-                    },
-                ],
+                items: {},
             },
         };
     },
+    mounted() {
+        this.selectItem({ name: '农副', categoryId: 1 });
+        this.getGoodSList();
+    },
+    computed: {
+        productTypeLevelTowValue() {
+            return this.type[0].select == "全部" ? "" : this.type[0].select;
+        },
+        deliveryPlaceValue() {
+            return this.type[2].select == "全部" ? "" : this.type[2].select;
+        },
+        brandValvue() {
+            return this.type[1].select == "全部" ? "" : this.type[1].select;
+        },
+        supplierValue() {
+            return this.type[3].select == "全部" ? "" : this.type[3].select;
+        }
+    },
     methods: {
-        handlePageSizeChange(pageSize) {
-            this.pagesize = pageSize;
-            console.log(pageSize)
-        },
-        handlePageChange(page) {
-            console.log(page)
-        },
         checkDetail() {
             var newPage = this.$router.resolve({path: '/detail', params: {id: 12313131231}})
             window.open(newPage.href,'_blank')
+        },
+        handlePageSizeChange(pageSize) {
+            this.pageSize = pageSize;
+            this.getGoodSList()
+        },
+        handlePageChange(page) {
+           this.currentPage = page
+           this.getGoodSList()
+        },
+        checkDetail() {
+            var newPage = this.$router.resolve({
+                path: "/goodDetail",
+                params: { id: 12313131231 },
+            });
+            window.open(newPage.href, "_blank");
+        },
+        selectItem(param) {
+            this.select.productType = param.name;
+            this.getType(param.categoryId);
+            this.getGoodSList(1)
+        },
+        async getType(categoryId) {
+            let { data } = await this.$api.getDemandType({
+                categoryId: categoryId,
+            });
+            this.type = [];
+            Object.keys(data).forEach((item) => {
+                data[item].unshift("全部");
+                this.type.push({
+                    classification: item,
+                    items: data[item],
+                    stateChange: false,
+                    state: true,
+                    select: "全部",
+                });
+            });
+            this.$refs.selfFilter.checkHight();
+        },
+        async getGoodSList(pageNum) {
+            let obj = {
+                pageNum: this.currentPage,
+                pageSize: this.pageSize,
+                productType: this.select.productType,
+                productTypeLevelTow: this.productTypeLevelTowValue,
+                deliveryPlace: this.deliveryPlaceValue,
+                brand:this.brandValvue,
+                supplier: this.supplierValue,
+                sort: this.select.sort,
+            }
+            let {data} = await this.$api.getGoodSList(obj)
+            this.list.total = data.total,
+            this.list.currentPage = data.pageNum,
+            this.list.pageSize = data.pageSize,
+            this.list.items = data.list
+        },
+        selectlevelTwo() {
+            this.getGoodSList(1)
         }
     },
 };

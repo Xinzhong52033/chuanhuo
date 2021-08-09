@@ -2,9 +2,9 @@
     <div class="goods">
         <div class="padding-box">
             <div class="top">
-                <leftMenu :menuList='menuList' @selectItem='selectItem' class="left-menu"></leftMenu>
+                <leftMenu :menuList='menuList' class="left-menu"></leftMenu>
                 <div class="right">
-                    <selfFilter :list='type'></selfFilter>
+                    <selfFilter :list='list.items'></selfFilter>
                 </div>
             </div>
             <order class="order" :orderType="orderType"></order>
@@ -34,7 +34,7 @@ import selfFilter from "../../components/selfFilter.vue";
 import order from "../../components/order.vue";
 import Order from "../../components/order.vue";
 import pagenation from "@/components/pagenation.vue";
-import Pagenation from "../../../../components/pagenation.vue";
+import Pagenation from '../../../../components/pagenation.vue';
 
 export default {
     name: "goods",
@@ -42,18 +42,18 @@ export default {
         leftMenu,
         selfFilter,
         Order,
-        pagenation,
+        pagenation
     },
     data() {
         return {
-            orderType: ["综合排序", "销量", "价格"],
+            orderType:['综合排序','销量','价格'],
             order: 1,
             menuList: [
-                { name: "能源", categoryId: "2" },
-                { name: "农副", categoryId: "1" },
-                { name: "化工", categoryId: "3" },
-                { name: "金属", categoryId: "4" },
-                { name: "建材", categoryId: "5" },
+                {name: "能源", value: '/personInfo'},
+                {name: "农副", value: '/personInfo'},
+                {name: "化工", value: '/personInfo'},
+                {name: "金属", value: '/personInfo'},
+                {name: "建材", value: '/personInfo'},
             ],
             goodsList: [
                 {
@@ -126,6 +126,7 @@ export default {
                     fahuo: "发货/自提仓库：攀盘江",
                     gongyingshang: "供应商：攀枝花盘江煤焦化有限公司",
                 },
+                
             ],
             currentPage: 1,
             pageSize: 10,
@@ -133,67 +134,6 @@ export default {
                 currentPage: this.currentPage,
                 pageSize: this.pageSize,
             },
-            type: [
-                {
-                    classification: "品类",
-                    items: [
-                        "全部",
-                        "焦炭",
-                        "石焦油",
-                        "石脑油",
-                        "原油",
-                        "沥青",
-                        "原煤",
-                        "天然气",
-                        "液化气",
-                    ],
-                    stateChange: false,
-                    state: true,
-                    select: "全部",
-                },
-                {
-                    classification: "发货地",
-                    items: [
-                        "全部",
-                        "成都",
-                        "绵阳",
-                        "乐山",
-                        "德阳",
-                        "宜宾",
-                        "泸州",
-                        "眉山",
-                        "广安",
-                        "达州",
-                        "广元",
-                        "雅安",
-                        "巴中",
-                        "内江",
-                        "攀枝花",
-                        "自贡",
-                    ],
-                    stateChange: false,
-                    state: true,
-                    select: "全部",
-                },
-                {
-                    classification: "品牌",
-                    items: ["全部", "西昌盘江", "攀钢钒", "西昌钢钒"],
-                    stateChange: false,
-                    state: true,
-                    select: "全部",
-                },
-                {
-                    classification: "供应商",
-                    items: [
-                        "全部",
-                        "西昌盘江煤焦化有限公司",
-                        "攀枝花盘江煤焦化有限公司",
-                    ],
-                    stateChange: false,
-                    state: true,
-                    select: "全部",
-                },
-            ],
             list: {
                 total: 15,
                 currentPage: 1,
@@ -242,7 +182,12 @@ export default {
                     },
                     {
                         classification: "品牌",
-                        items: ["全部", "西昌盘江", "攀钢钒", "西昌钢钒"],
+                        items: [
+                            "全部",
+                            "西昌盘江",
+                            "攀钢钒",
+                            "西昌钢钒",
+                        ],
                         stateChange: false,
                         state: true,
                         select: "全部",
@@ -265,38 +210,15 @@ export default {
     methods: {
         handlePageSizeChange(pageSize) {
             this.pagesize = pageSize;
-            console.log(pageSize);
+            console.log(pageSize)
         },
         handlePageChange(page) {
-            console.log(page);
+            console.log(page)
         },
         checkDetail() {
-            var newPage = this.$router.resolve({
-                path: "/goodDetail",
-                params: { id: 12313131231 },
-            });
-            window.open(newPage.href, "_blank");
-        },
-        selectItem(param) {
-            console.log(11111, param);
-            this.getType(param.categoryId)
-            
-        },
-        async getType(categoryId) {
-            let {data} = await this.$api.getGoodType({
-            categoryId: categoryId
-            })
-            this.type = []
-            Object.keys(data).forEach((item) => {
-                this.type.push({
-                    classification: item,
-                    items: data[item],
-                    stateChange: false,
-                    state: true,
-                    select: "全部",
-                });
-            });
-      }
+            var newPage = this.$router.resolve({path: '/goodDetail', params: {id: 12313131231}})
+            window.open(newPage.href,'_blank')
+        }
     },
 };
 </script>
@@ -305,7 +227,7 @@ export default {
 .goods {
     font-size: 16px;
     background-color: @bc2;
-    padding-bottom: 0px;
+    padding-bottom:0px;
     // overflow: hidden;
     .top {
         padding: 30px 0;
@@ -369,8 +291,8 @@ export default {
         }
     }
     .pagenation {
-        text-align: center;
-        padding-bottom: 60px;
+       text-align: center;
+       padding-bottom: 60px;
     }
 }
 </style>

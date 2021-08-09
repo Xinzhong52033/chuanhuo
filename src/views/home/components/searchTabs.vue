@@ -58,26 +58,6 @@ export default {
             select: "1",
             input: "",
             options: [
-                {
-                    value: "选项1",
-                    label: "黄金糕",
-                },
-                {
-                    value: "选项2",
-                    label: "双皮奶",
-                },
-                {
-                    value: "选项3",
-                    label: "蚵仔煎",
-                },
-                {
-                    value: "选项4",
-                    label: "龙须面",
-                },
-                {
-                    value: "选项5",
-                    label: "北京烤鸭",
-                },
             ],
             value: "",
             value1: "",
@@ -90,6 +70,13 @@ export default {
                 建材产品: require("../../../assets/img/build.png"),
             },
             activeName: 'home',
+            typeMap:{
+                1: '农副',
+                2: '能源',
+                3: '金属',
+                4: '化工',
+                5: '建材',
+            }
         };
     },
     created() {
@@ -116,10 +103,15 @@ export default {
         async selectGroupCategory() {
             let { data } = await this.$api.selectGroupCategory();
             this.selectGroup = data;
+            this.selectGroup.forEach(item => {
+                item.list.splice(4, item.list.length+1)
+            });
         },
         toGood(item) {
-            this.$router.push({path: '/goods', query: {firstLevel: item.parentId, secondLevel: item.categoryId}})
-           this.set_banerSelect('goods')
+            console.log(item)
+            this.$router.push({path: '/goods', query: {productType: this.typeMap[item.parentId],categoryId:item.parentId, productTypeLevelTow: item.categoryName}})
+            this.closeSelect()
+            this.set_banerSelect('goods')
         },
         handleClick(tab, event) {
            this.$router.push(`/${tab.name}`)

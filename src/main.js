@@ -30,8 +30,8 @@ Vue.prototype.$replaceLoadingElement = function (instance) {
   })
   return loading
 }
-// Vue.prototype.$widthCoefficient = document.documentElement.clientWidth / 1920 //widthCoefficient数字系数,用于组件中无法动态变化大小的情况
-Vue.prototype.$widthCoefficient = 1 //widthCoefficient数字系数,用于组件中无法动态变化大小的情况
+Vue.prototype.$widthCoefficient = document.documentElement.clientWidth / 1920 //widthCoefficient数字系数,用于组件中无法动态变化大小的情况
+// Vue.prototype.$widthCoefficient = 1 //widthCoefficient数字系数,用于组件中无法动态变化大小的情况
 new Vue({
   router,
   store,

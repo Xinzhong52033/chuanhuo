@@ -102,3 +102,31 @@ export const getGoodType = (param)=>{
         params:param
     })
 }
+
+// 获取商品数据
+export const getGoodSList = (param)=>{
+    return request({
+        url:'/sc-server/commodityController/selectCommodityByType',
+        method:'get',
+        params:param
+    })
+}
+
+// 需求类型
+
+export const getDemandType = (param)=>{
+    return request({
+        url:'/sc-server/demandDetailsController/selectDemandDetailType',
+        method:'get',
+        params:param
+    })
+}
+
+// 查询商品详情
+export const getGoodDetail = (param)=>{
+    return request({
+        url:'/sc-server/commodityController/selectCommodityById',
+        method:'get',
+        params:param
+    })
+}

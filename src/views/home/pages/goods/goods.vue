@@ -2,26 +2,26 @@
     <div class="goods">
         <div class="padding-box">
             <div class="top">
-                <leftMenu :menuList='menuList' class="left-menu"></leftMenu>
+                <leftMenu ref="leftMenu" :menuList='menuList' @selectItem='selectItem' class="left-menu"></leftMenu>
                 <div class="right">
-                    <selfFilter :list='list.items'></selfFilter>
+                    <selfFilter :list='type' @selectlevelTwo="selectlevelTwo" ref="selfFilter"></selfFilter>
                 </div>
             </div>
-            <order class="order" :orderType="orderType"></order>
+            <order class="order" :select='select' @selectOrder='()=>getGoodSList(1)' :orderType="orderType"></order>
             <ul class="goodsList">
-                <li v-for="(item, index) in goodsList" :key="index">
+                <li v-for="(item, index) in list.items" :key="index">
                     <div class="name">
-                        <div class="mb-14 big-black">{{item.name}}</div>
-                        <div>库存：{{item.kucun}}</div>
+                        <div class="mb-14 big-black">{{item.commodityName}}</div>
+                        <div>库存：{{item.commodityStock}}</div>
                     </div>
                     <div class="price">
-                        <span class="big-number">{{item.price}}</span> 元/吨
+                        <span class="big-number">{{item.commodityPrice}}</span> 元/吨
                     </div>
                     <div class="where">
-                        <div class="mb-14">{{item.fahuo}}</div>
-                        <div>{{item.gongyingshang}}</div>
+                        <div class="mb-14">发货/自提仓库：{{item.warehouseName}}</div>
+                        <div>供应商：{{item.supplierName}}</div>
                     </div>
-                    <div class="detail" @click="checkDetail">查看详情</div>
+                    <div class="detail" @click="checkDetail(item)">查看详情</div>
                 </li>
             </ul>
             <pagenation class="pagenation" :total="list.total" :page-size="list.pagesize" :current-page="list.currentPage" @page-size-change="handlePageSizeChange" @page-change="handlePageChange"></pagenation>
@@ -34,7 +34,7 @@ import selfFilter from "../../components/selfFilter.vue";
 import order from "../../components/order.vue";
 import Order from "../../components/order.vue";
 import pagenation from "@/components/pagenation.vue";
-import Pagenation from '../../../../components/pagenation.vue';
+import Pagenation from "../../../../components/pagenation.vue";
 
 export default {
     name: "goods",
@@ -42,182 +42,155 @@ export default {
         leftMenu,
         selfFilter,
         Order,
-        pagenation
+        pagenation,
     },
     data() {
         return {
-            orderType:['综合排序','销量','价格'],
+            orderType: ["综合排序", "库存", "价格"],
             order: 1,
             menuList: [
-                {name: "能源", value: '/personInfo'},
-                {name: "农副", value: '/personInfo'},
-                {name: "化工", value: '/personInfo'},
-                {name: "金属", value: '/personInfo'},
-                {name: "建材", value: '/personInfo'},
+                { name: "农副", categoryId: "1" },
+                { name: "能源", categoryId: "2" },
+                { name: "化工", categoryId: "3" },
+                { name: "金属", categoryId: "4" },
+                { name: "建材", categoryId: "5" },
             ],
             goodsList: [
-                {
-                    name: "二级建造焦炭",
-                    kucun: "2.343吨",
-                    price: "1780",
-                    fahuo: "发货/自提仓库：攀盘江",
-                    gongyingshang: "供应商：攀枝花盘江煤焦化有限公司",
-                },
-                {
-                    name: "西昌盘江煤焦油",
-                    kucun: "8.248吨",
-                    price: "4560",
-                    fahuo: "发货/自提仓库：攀盘江",
-                    gongyingshang: "供应商：攀枝花盘江煤焦化有限公司",
-                },
-                {
-                    name: "石脑油",
-                    kucun: "5.369吨",
-                    price: "2530",
-                    fahuo: "发货/自提仓库：攀盘江",
-                    gongyingshang: "供应商：攀枝花盘江煤焦化有限公司",
-                },
-                {
-                    name: "甲醇",
-                    kucun: "3.343吨",
-                    price: "1800",
-                    fahuo: "发货/自提仓库：攀盘江",
-                    gongyingshang: "供应商：攀枝花盘江煤焦化有限公司",
-                },
-                {
-                    name: "Brent原油",
-                    kucun: "2.36吨",
-                    price: "2333",
-                    fahuo: "发货/自提仓库：攀盘江",
-                    gongyingshang: "供应商：攀枝花盘江煤焦化有限公司",
-                },
-                {
-                    name: "西昌盘江煤焦油",
-                    kucun: "2.568吨",
-                    price: "2693",
-                    fahuo: "发货/自提仓库：攀盘江",
-                    gongyingshang: "供应商：攀枝花盘江煤焦化有限公司",
-                },
-                {
-                    name: "煤焦油",
-                    kucun: "1.343吨",
-                    price: "3600",
-                    fahuo: "发货/自提仓库：攀盘江",
-                    gongyingshang: "供应商：攀枝花盘江煤焦化有限公司",
-                },
-                {
-                    name: "西昌盘江煤焦油",
-                    kucun: "7.205吨",
-                    price: "2780",
-                    fahuo: "发货/自提仓库：攀盘江",
-                    gongyingshang: "供应商：攀枝花盘江煤焦化有限公司",
-                },
-                {
-                    name: "煤焦油",
-                    kucun: "3.233吨",
-                    price: "3636",
-                    fahuo: "发货/自提仓库：攀盘江",
-                    gongyingshang: "供应商：攀枝花盘江煤焦化有限公司",
-                },
-                {
-                    name: "甲醇",
-                    kucun: "3.33吨",
-                    price: "1500",
-                    fahuo: "发货/自提仓库：攀盘江",
-                    gongyingshang: "供应商：攀枝花盘江煤焦化有限公司",
-                },
-                
             ],
             currentPage: 1,
             pageSize: 10,
+            type: [
+                {
+                    classification: "品类",
+                    items: [
+                    ],
+                    stateChange: false,
+                    state: true,
+                    select: "全部",
+                },
+                {
+                    classification: "发货地",
+                    items: [
+                    ],
+                    stateChange: false,
+                    state: true,
+                    select: "全部",
+                },
+                {
+                    classification: "品牌",
+                    items: [],
+                    stateChange: false,
+                    state: true,
+                    select: "全部",
+                },
+                {
+                    classification: "供应商",
+                    items: [
+                    ],
+                    stateChange: false,
+                    state: true,
+                    select: "全部",
+                },
+            ],
             select: {
-                currentPage: this.currentPage,
-                pageSize: this.pageSize,
+                pageNum: '',
+                pageSize: '',
+                productType: "农副",
+                productTypeLevelTow: '',
+                deliveryPlace:'',
+                brand:'',
+                supplier: '',
+                sort: "1",
             },
             list: {
                 total: 15,
                 currentPage: 1,
                 pageSize: 10,
-                items: [
-                    {
-                        classification: "品类",
-                        items: [
-                            "全部",
-                            "焦炭",
-                            "石焦油",
-                            "石脑油",
-                            "原油",
-                            "沥青",
-                            "原煤",
-                            "天然气",
-                            "液化气",
-                        ],
-                        stateChange: false,
-                        state: true,
-                        select: "全部",
-                    },
-                    {
-                        classification: "发货地",
-                        items: [
-                            "全部",
-                            "成都",
-                            "绵阳",
-                            "乐山",
-                            "德阳",
-                            "宜宾",
-                            "泸州",
-                            "眉山",
-                            "广安",
-                            "达州",
-                            "广元",
-                            "雅安",
-                            "巴中",
-                            "内江",
-                            "攀枝花",
-                            "自贡",
-                        ],
-                        stateChange: false,
-                        state: true,
-                        select: "全部",
-                    },
-                    {
-                        classification: "品牌",
-                        items: [
-                            "全部",
-                            "西昌盘江",
-                            "攀钢钒",
-                            "西昌钢钒",
-                        ],
-                        stateChange: false,
-                        state: true,
-                        select: "全部",
-                    },
-                    {
-                        classification: "供应商",
-                        items: [
-                            "全部",
-                            "西昌盘江煤焦化有限公司",
-                            "攀枝花盘江煤焦化有限公司",
-                        ],
-                        stateChange: false,
-                        state: true,
-                        select: "全部",
-                    },
-                ],
+                items: {},
             },
+            // productType: this.$route.param.productType,
+            // productTypeLevelTow: this.$route.param.productTypeLevelTow,
         };
+    },
+    created() {
+        console.log(2222, this.$route.query)
+    },  
+    mounted() {
+        this.selectItem({ name: '农副', categoryId: 1 });
+        this.getGoodSList();
+    },
+    computed: {
+        productTypeLevelTowValue() {
+            return this.type[0].select == "全部" ? "" : this.type[0].select;
+        },
+        deliveryPlaceValue() {
+            return this.type[2].select == "全部" ? "" : this.type[2].select;
+        },
+        brandValvue() {
+            return this.type[1].select == "全部" ? "" : this.type[1].select;
+        },
+        supplierValue() {
+            return this.type[3].select == "全部" ? "" : this.type[3].select;
+        }
     },
     methods: {
         handlePageSizeChange(pageSize) {
-            this.pagesize = pageSize;
-            console.log(pageSize)
+            this.pageSize = pageSize;
+            this.getGoodSList()
         },
         handlePageChange(page) {
-            console.log(page)
+           this.currentPage = page
+           this.getGoodSList()
         },
-        checkDetail() {
-            var newPage = this.$router.resolve({path: '/goodDetail', params: {id: 12313131231}})
-            window.open(newPage.href,'_blank')
+        checkDetail(item) {
+            console.log(item)
+            var newPage = this.$router.resolve({
+                path: "/goodDetail",
+                query: { commodityId: item.commodityId },
+            });
+            window.open(newPage.href, "_blank");
+        },
+        selectItem(param) {
+            this.select.productType = param.name;
+            this.getType(param.categoryId);
+            this.getGoodSList(1)
+        },
+        async getType(categoryId) {
+            let { data } = await this.$api.getGoodType({
+                categoryId: categoryId,
+            });
+            this.type = [];
+            Object.keys(data).forEach((item) => {
+                data[item].unshift("全部");
+                this.type.push({
+                    classification: item,
+                    items: data[item],
+                    stateChange: false,
+                    state: true,
+                    select: "全部",
+                });
+            });
+            this.$refs.selfFilter.checkHight();
+        },
+        async getGoodSList(pageNum) {
+            let obj = {
+                pageNum: this.currentPage,
+                pageSize: this.pageSize,
+                productType: this.select.productType,
+                productTypeLevelTow: this.productTypeLevelTowValue,
+                deliveryPlace: this.deliveryPlaceValue,
+                brand:this.brandValvue,
+                supplier: this.supplierValue,
+                sort: this.select.sort,
+            }
+            let {data} = await this.$api.getGoodSList(obj)
+            this.list.total = data.total,
+            this.list.currentPage = data.pageNum,
+            this.list.pageSize = data.pageSize,
+            this.list.items = data.list
+        },
+        selectlevelTwo() {
+            this.getGoodSList(1)
         }
     },
 };
@@ -227,7 +200,7 @@ export default {
 .goods {
     font-size: 16px;
     background-color: @bc2;
-    padding-bottom:0px;
+    padding-bottom: 0px;
     // overflow: hidden;
     .top {
         padding: 30px 0;
@@ -291,8 +264,8 @@ export default {
         }
     }
     .pagenation {
-       text-align: center;
-       padding-bottom: 60px;
+        text-align: center;
+        padding-bottom: 60px;
     }
 }
 </style>

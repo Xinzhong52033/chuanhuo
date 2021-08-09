@@ -1,7 +1,7 @@
 <template>
   <div class="leftMenu">
     <el-menu
-      default-active="能源"
+      default-active="农副"
       class="el-menu-vertical-demo"
     >
       <el-menu-item v-for="(item, index) in menuList" @click="selectItem(item)" :key="item.name" :index="item.name">
@@ -28,13 +28,11 @@ export default {
   },
   methods: {
       select(index) {
-          this.$emit('select', index),
-          console.log(index)
+          this.$emit('select', index)
       },
       selectItem(item) {
         this.$emit('selectItem', item)
       },
-     
   }
 };
 </script>
