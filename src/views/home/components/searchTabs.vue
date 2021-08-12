@@ -114,7 +114,7 @@ export default {
             this.set_banerSelect('goods')
         },
         handleClick(tab, event) {
-           this.$router.push(`/${tab.name}`)
+           this.$router.push({path:tab.name})
            if (tab.name == 'home' && this.$route.path=='/home') {
                this.$refs.elSelect.focus()
            }

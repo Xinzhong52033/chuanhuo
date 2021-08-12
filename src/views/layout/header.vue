@@ -11,12 +11,12 @@
             </el-breadcrumb>
         </div>
         <div class="login">
-            <el-breadcrumb separator="|" v-if="!status">
+            <el-breadcrumb separator="|" v-if="status=='0'">
                 <el-breadcrumb-item><span class="focus" @click="login">登录</span></el-breadcrumb-item>
                 <el-breadcrumb-item><span class="focus" @click="register">注册</span></el-breadcrumb-item>
             </el-breadcrumb>
-            <div class="center" v-if="status" @click="center">个人中心</div>
-            <div class="button" @click="loginOut" v-if="status">退出登录</div>
+            <div class="center" v-if="status=='1'" @click="center">个人中心</div>
+            <div class="button" @click="loginOut" v-if="status=='1'">退出登录</div>
             <!-- <div class="button" @click="center">运营中心</div> -->
         </div>
     </div>
@@ -54,7 +54,7 @@ export default {
         },
         center() {
             var newPage = this.$router.resolve({
-                path: "/companyInfo",
+                path: this.type == 1 ?"/companyInfo":'/personInfo',
                 params: { id: 12313131231 },
             });
             window.open(newPage.href, "_blank");
@@ -120,7 +120,6 @@ export default {
         &:hover {
             color: @blue; 
         }
-        
         margin-right: 10px;
     }
     .focus {

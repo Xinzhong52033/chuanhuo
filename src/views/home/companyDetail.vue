@@ -10,12 +10,12 @@
                 <div class="left">
                     <img :src="headImg || require('../../assets/img/company.jpg')" alt="" />
                     <div>
-                        <div class="want">{{companyInfo.supplierName}}</div>
+                        <div class="want">{{companyInfo.companyName}}</div>
                         <div class="location">
-                            <span><i class="el-icon-location"></i>{{companyInfo.registeredAddress}}</span><span>|</span><span class="park" @click="park"><i class="iconfont icon-yuanqu"></i>{{companyInfo.parkName}}</span>
+                            <span><i class="el-icon-location"></i>{{companyInfo.companyAddress}}</span><span v-if="companyInfo.parkName">|</span><span class="park" @click="park" v-if="companyInfo.parkName"><i class="iconfont icon-yuanqu"></i>{{companyInfo.parkName}}</span>
                         </div>
                         <div class="tag">
-                            <div>主营：{{companyInfo.mainProducts}}</div>
+                            <div v-if="companyInfo.mainProducts">主营：{{companyInfo.mainProducts}}</div>
                             <!-- <div>高钒铁</div>
                                   <div>钒氮合金</div>
                                   <div>钒铝合金</div> -->
@@ -43,17 +43,17 @@
                         <div class="content">
                             <!-- 攀钢集团钒钛资源股份有限公司成立于1993年03月27日，注册地位于攀枝花市东区弄弄坪，法定代表人为谢俊勇。<br />
               经营范围包括生产销售钒钛制品（含危险化学品，凭许可证许可范围及期限从事经营，有效期至2021年9月28日）；生产销售金属制品；销售（含互联网销售）：矿产品（不含煤炭及制品）、冶金辅料、金属材料、五金、交电、劳保用品；钒钛产品检验服务；电力供应；机械设备维修服务；仓储服务（含危险化学品，凭许可证许可范围及期限从事经营，有效期至2021年5月2日）；货物运输代理服务；钒钛制品生产技术开发、技术咨询、技术服务、技术转让；货物与技术进出口业务。 -->
-                            {{companyInfo.introduction}}
+                            {{companyInfo.companyDesc}}
                         </div>
                     </div>
                     <div>
                         <div class="underLine-title">联系方式</div>
                         <div class="contact">
-                            <span class="item"><i class="iconfont icon-a-zu1350"></i>{{companyInfo.contactPerson}}</span>
+                            <span class="item"><i class="iconfont icon-a-zu1350"></i>{{companyInfo.contactPerson?companyInfo.contactPerson:'暂无'}}</span>
                             <span>|</span>
-                            <span class="item"><i class="iconfont icon-dianhua"></i>{{companyInfo.contactPhone}}</span>
+                            <span class="item"><i class="iconfont icon-dianhua"></i>{{companyInfo.contactNumber?companyInfo.contactNumber:'暂无'}}</span>
                             <span>|</span>
-                            <span class="item"><i class="iconfont icon-youxiang"></i>{{companyInfo.contactEmail}}</span>
+                            <span class="item"><i class="iconfont icon-youxiang"></i>{{companyInfo.contactEmail?companyInfo.contactEmail:'暂无'}}</span>
                         </div>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                         </div>
                     </li>
                 </ul>
-                <Pagenation class="pagenation" :total="list.total" :page-size="list.pagesize" :current-page="list.currentPage" @page-size-change="handlePageSizeChange" @page-change="handlePageChange"></Pagenation>
+                <Pagenation class="pagenation" v-if="list.total>10" :total="list.total" :page-size="list.pagesize" :current-page="list.currentPage" @page-size-change="handlePageSizeChange" @page-change="handlePageChange"></Pagenation>
             </div>
             <div class="business-info">
                 <div class="padding-box">
@@ -103,7 +103,7 @@
                                     <span class="item">企业注册名称</span>
                                 </div>
                                 <div class="bottom">
-                                    {{companyInfo.supplierName}}
+                                    {{companyInfo.companyName}}
                                 </div>
                             </div>
                             <div class="card">
@@ -112,9 +112,9 @@
                                     <span class="item">认证信息</span>
                                 </div>
                                 <div class="bottom">
-                                    {{companyInfo.authenticate}}
+                                    {{companyInfo.authenticate=='1'?'已认证':'未认证'}}
                                 </div>
-                                <img class="unverified" v-if="companyInfo.authenticate=='未认证'" src="../../assets/img/unverified.png" alt="">
+                                <img class="unverified" v-if="companyInfo.authenticate!='1'" src="../../assets/img/unverified.png" alt="">
                             </div>
                             <div class="card">
                                 <div class="top">
@@ -149,7 +149,7 @@
                                     <span class="item">税号/统一社会信用代码</span>
                                 </div>
                                 <div class="bottom">
-                                    {{companyInfo.creditCode}}
+                                    {{companyInfo.agencyCode}}
                                 </div>
                             </div>
                         </div>
@@ -159,8 +159,12 @@
                                 <span class="item">营业执照</span>
                             </div>
                             <!-- <img src="../../assets/img/zz.jpg" alt=""> -->
-                            <div class="businessLicense">
-                                <el-image style="width: 100%; height: 100%" :src="this.companyInfo.businessLicense" :preview-src-list="srclist">
+                            <div class="businessLicense" v-if="companyInfo.businessLicense!=''">
+                                <el-image style="width: 100%; height: 100%" :src="companyInfo.businessLicense" :preview-src-list="srclist">
+                                </el-image>
+                            </div>
+                            <div class="businessLicense" v-if="companyInfo.businessLicense==''">
+                                <el-image style="width: 100%; height: 100%" :src="require('../../assets/img/zz.jpg')" >
                                 </el-image>
                             </div>
                         </div>
@@ -237,7 +241,7 @@ export default {
         park() {
             var newPage = this.$router.resolve({
                 path: "/parkDetail",
-                params: { id: 12313131231 },
+                query: { id: this.companyInfo.parkId},
             });
             window.open(newPage.href, "_blank");
         },
@@ -409,7 +413,7 @@ export default {
                     margin-right: 16px;
                     // font-weight: 600;
                 }
-                .flexb();
+                .flex(space-around);
             }
         }
     }

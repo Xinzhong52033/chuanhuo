@@ -68,7 +68,7 @@
                                 <span class="link" @click="getRow(row)"> {{row.budget}}</span>
                             </template>
                             <template slot="number" slot-scope="{row}">
-                                <span class="link"> {{row.count}}</span>
+                                <span class="link"> {{row.count}} {{row.unit}}</span>
                             </template>
                         </DataTable>
                     </div>
@@ -103,7 +103,7 @@ const tableColumns = [
         showOverflow: true,
     },
     {
-        title: "数量(件)",
+        title: "数量",
         align: "center",
         name: "__slot:number",
         width: "200px",
@@ -264,7 +264,6 @@ export default {
     .outer {
         background-color: @bc2;
     }
-
     .link {
         color: @yellow;
         font-weight: 600;

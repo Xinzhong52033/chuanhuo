@@ -13,7 +13,8 @@ export default new Vuex.Store({
     status: cookie.get("status") || 0,
     type: cookie.get("type") || "",
     userId: cookie.get("userId") || "",
-    activeName: cookie.get("activeName") || 'home'
+    activeName: cookie.get("activeName") || 'home',
+    icon: cookie.get("icon") || ''
   },
   mutations: {
     set_banerSelect: (state, data) => {
@@ -46,6 +47,10 @@ export default new Vuex.Store({
       state.userId = data;
       cookie.set("userId", data);
     },
+    set_icon: (state, data) => {
+      state.icon = data;
+      cookie.set("icon", data);
+    }, 
   },
   actions: {},
   modules: {

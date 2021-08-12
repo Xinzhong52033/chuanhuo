@@ -3,11 +3,11 @@
         <div class="padding-box">
             <div class="left-menu">
                 <div class="top">
-                    <img src="../../../../../assets/img/avatar.png" alt="">
-                    <span class="name">攀钢集团</span>
+                    <img :src="icon || require('../../../../../assets/img/avatar.png')" alt="">
+                    <span class="name">{{this.name}}</span>
                 </div>
                 <div class="menu">
-                    <leftMenu :menuList="menuList" @select="select" @selectItem='selectItem'></leftMenu>
+                    <leftMenu :menuList="menuList" :defaultActive='defaultActive' @select="select" @selectItem='selectItem'></leftMenu>
                 </div>
             </div>
             <div class="right">
@@ -19,6 +19,7 @@
 
 <script>
 import leftMenu from "../../../components/leftMenu.vue";
+import {mapState} from 'vuex'
 export default {
     components: {
         leftMenu
@@ -33,7 +34,20 @@ export default {
                 {name: "收藏夹", value: '/companyCollect'},
                 {name: "需求管理", value: '/companyDemandManage'}
             ],
+            defaultActive:'账号信息',
         };
+    },
+    created() {
+    },
+    computed: {
+        ...mapState(
+            {
+                name: (state) => state.name,
+                status: (state) => state.status,
+                type: (state) => state.type,
+                icon: (state) => state.icon,
+            }
+        )
     },
     methods: {
         select(param) {
@@ -42,6 +56,7 @@ export default {
         },
         selectItem(item) {
             this.$router.push({path: item.value})
+            this.defaultActive = item.name
         }
     }
 };
@@ -92,7 +107,8 @@ export default {
     }
     .right {
         flex: 1;
-        min-height: 800px;
+        height: 800px;
+        overflow: auto;
         background-color: #fff;
         padding: 20px;
         .bs();

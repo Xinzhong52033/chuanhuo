@@ -18,7 +18,7 @@
                     </div>
                     <div class="row2">
                         <span v-if="goodData.commodityDetails">价格：<span class="big-yellow">{{goodData.commodityDetails.commodityPrice}}</span> 元/{{goodData.commodityDetails.commoditySpecification}}</span>
-                        <span class="company" @click="company" v-if="goodData.supplierDetails"><i class="iconfont icon-dingwei"></i>{{goodData.supplierDetails.supplierName}}<i class="el-icon-arrow-right"></i></span>
+                        <span class="company" @click="company" v-if="goodData.parkCompanyInfo"><i class="iconfont icon-dingwei"></i>{{goodData.parkCompanyInfo.companyName}}<i class="el-icon-arrow-right"></i></span>
                     </div>
                     <div class="bg">
                         <div class="info">
@@ -83,12 +83,12 @@
                         <div class="square"></div>
                         <span>供应商信息</span>
                     </div>
-                    <div class="details" v-if="goodData.supplierDetails">
-                        <div><span class="name">公司名称</span><span>{{goodData.supplierDetails.supplierName}}</span></div>
-                        <div><span class="name">联系人</span><span>{{goodData.supplierDetails.contactPerson}}</span></div>
-                        <div><span class="name">类型</span><span>{{goodData.supplierDetails.enterpriseType}}</span></div>
-                        <div><span class="name">公司注册地址</span><span>{{goodData.supplierDetails.registeredAddress}}</span></div>
-                        <div><span class="name">联系电话</span><span>{{goodData.supplierDetails.contactPhone}}</span></div>
+                    <div class="details" v-if="goodData.parkCompanyInfo">
+                        <div><span class="name">公司名称</span><span>{{goodData.parkCompanyInfo.companyName}}</span></div>
+                        <div><span class="name">联系人</span><span>{{goodData.parkCompanyInfo.contactPerson}}</span></div>
+                        <div><span class="name">类型</span><span>{{goodData.parkCompanyInfo.companyType}}</span></div>
+                        <div><span class="name">公司注册地址</span><span>{{goodData.parkCompanyInfo.registeredAddress}}</span></div>
+                        <div><span class="name">联系电话</span><span>{{goodData.parkCompanyInfo.contactPhone}}</span></div>
                     </div>
                 </div>
                 <div class="info">
@@ -242,7 +242,7 @@ export default {
         company() {
             var newPage = this.$router.resolve({
                 path: "/companyDetail",
-                query: { id: this.goodData.supplierDetails.supplierId},
+                query: { id: this.goodData.parkCompanyInfo.id}, 
             });
             window.open(newPage.href, "_blank");
         },

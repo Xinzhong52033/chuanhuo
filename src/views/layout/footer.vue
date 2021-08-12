@@ -7,10 +7,10 @@
                     <span>川货供需展示和对接系统 </span>
                 </div>
                 <el-breadcrumb separator="|" class="tabs">
-                    <el-breadcrumb-item><span class="focus item">首页</span></el-breadcrumb-item>
-                    <el-breadcrumb-item><span class="item">品牌馆</span></el-breadcrumb-item>
-                    <el-breadcrumb-item><span class="item">川货汇</span></el-breadcrumb-item>
-                    <el-breadcrumb-item><span class="item">需求单</span></el-breadcrumb-item>
+                    <el-breadcrumb-item><span @click="handleClick('home')" class="item" :class="activeName=='home'?'focus':''">首页</span></el-breadcrumb-item>
+                    <el-breadcrumb-item><span @click="handleClick('brand')" class="item" :class="activeName=='brand'?'focus':''">品牌馆</span></el-breadcrumb-item>
+                    <el-breadcrumb-item><span @click="handleClick('goods')" class="item" :class="activeName=='goods'?'focus':''">川货汇</span></el-breadcrumb-item>
+                    <el-breadcrumb-item><span @click="handleClick('demand')" class="item" :class="activeName=='demand'?'focus':''">求购场</span></el-breadcrumb-item>
                 </el-breadcrumb>
                 <div class="nouse"></div>
             </div>
@@ -41,13 +41,33 @@
 </template>                 
 
 <script>
+import { mapState, mapMutations} from "vuex";
 export default {
     name: "homefooter",
     data() {
         return {
             number: 10000,
+            activeName: this.$store.state.banerSelect || 'home',
         };
     },
+    computed: {
+        ...mapState({
+             banerSelect: (state) => state.banerSelect,
+        })
+    },
+    watch: {
+        banerSelect(val) {
+            this.activeName = val
+        }
+    },
+    methods: {
+        ...mapMutations(['set_banerSelect']),
+        handleClick(name) {
+           this.$router.push({path:name})
+           this.set_banerSelect(name)
+        },
+    },
+    
 };
 </script>
 

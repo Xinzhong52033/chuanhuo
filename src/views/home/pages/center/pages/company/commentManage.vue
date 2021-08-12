@@ -1,7 +1,7 @@
 <template>
     <div class="commentManage">
         <div class="table">
-            <DataTable :height="700*$widthCoefficient" style="width: 100%" :columns="tableColumns" :border="true" :data="list.items" :total="list.total">
+            <DataTable style="width: 100%" :columns="tableColumns" :border="true" :data="list.items" :total="list.total">
                 <template slot="option" slot-scope="{ row }">
                 </template>
             </DataTable>
@@ -16,8 +16,8 @@ const tableColumns = [
     {
         title: "编号",
         align: "center",
-        name: "index",
-        width: 50*$widthCoefficient+"px",
+        type: "index",
+        width: 60*$widthCoefficient+"px",
         showOverflow: true,
     },
     {
@@ -57,6 +57,7 @@ const tableColumns = [
         title: "操作",
         align: "center",
         name: "opration",
+        width: 120*$widthCoefficient+"px",
         showOverflow: true,
     },
     
@@ -217,37 +218,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.companyInfo {
+.commentManage {
     .wh(100%, 100%);
     .bs();
-    .table {
-        width: 100%;
-        font-size: 16px;
-        tr {
-            width: 100%;
-        }
-        td {
-            height: 50px;
-            text-align: left;
-            border-right: 1px solid #e1e6f0;
-            border-bottom: 1px solid #e1e6f0;
-            .bs();
-            padding: 10px;
-        }
-        .name {
-            background-color: @bc2;
-            width: 188px;
-            color: @fc1;
-        }
-        .value {
-            // width: 35%;
-            color: @black;
-        }
-        border-top: 1px solid #e1e6f0;
-        border-left: 1px solid #e1e6f0;
-        .bs();
-        
-    }
     .avatar {
             .wh(60px, 60px);
             border-radius: 50%;
@@ -255,6 +228,12 @@ export default {
     .psd {
         margin-top: 30px;
         .detail(150px, 46px);
+    }
+    .table {
+        height: 100%;
+        /deep/.data-table {
+            height: 100%;
+        }
     }
 }
 </style>

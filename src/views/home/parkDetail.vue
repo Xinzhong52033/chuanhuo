@@ -10,16 +10,16 @@
                 <div class="left">
                     <img src="../../assets/img/company.jpg" alt="" />
                     <div>
-                        <div class="want">攀枝花钒钛产业园区</div>
+                        <div class="want">{{parkInfo.parkName}}</div>
                         <div class="location">
-                            <span><i class="el-icon-location"></i>攀枝花市金沙江大道东段1491号</span>
+                            <span><i class="el-icon-location"></i>{{parkInfo.parkAddress}}</span>
                         </div>
                         <div class="tag">
-                            <div>土地资源</div>
-                            <div>厂房租赁</div>
+                            <div>标签：{{parkInfo.parkLabel}}</div>
+                            <!-- <div>厂房租赁</div>
                             <div>仓库租售</div>
                             <div>税收优惠</div>
-                            <div>写字楼</div>
+                            <div>写字楼</div> -->
                         </div>
                     </div>
                 </div>
@@ -42,18 +42,17 @@
                     <div>
                         <span class="underLine-title">供应商简介</span>
                         <div class="content">
-                            攀枝花钒钛高新技术产业开发区（以下简称钒钛高新区）始建于2001年，公告面积
-                            3.10平方公里，实际管辖面积99.77平方公里，城市控规总面积31.16平方公里，已建成工业区总面积16.5平方公里。2006年1月，经国家发改委批准为“四川攀枝花钒钛产业园区”；2013年8月，被省政府认定为省级高新技术产业园区；2015年9月，被国务院批准为国家级高新技术产业开发区，是经国务院批准的首个以金属材料产业开发为主要依托的国家级高新区。先后荣膺国家外贸转型升级专业型示范基地、四川省新型工业化示范基地、四川省循环经济试点园区、四川省知识产权试点园区、四川省生产性服务业示范基地、四川省省级出口钒钛质量安全示范区、全国产业集群区域品牌建设“钒钛产”。
+                            {{parkInfo.parkDesc}}
                         </div>
                     </div>
                     <div>
                         <div class="underLine-title">联系方式</div>
                         <div class="contact">
-                            <span class="item"><i class="iconfont icon-a-zu1350"></i>王*钢</span>
+                            <span class="item"><i class="iconfont icon-a-zu1350"></i>{{parkInfo.contactPerson?parkInfo.contactPerson:'暂无'}}</span>
                             <span>|</span>
-                            <span class="item"><i class="iconfont icon-dianhua"></i>135****7350</span>
+                            <span class="item"><i class="iconfont icon-dianhua"></i>{{parkInfo.contactNumber?parkInfo.contactNumber:'暂无'}}</span>
                             <span>|</span>
-                            <span class="item"><i class="iconfont icon-youxiang"></i>1435871767@qq.com</span>
+                            <span class="item"><i class="iconfont icon-youxiang"></i>{{parkInfo.contactEmail?parkInfo.contactEmail:'暂无'}}</span>
                         </div>
                     </div>
                 </div>
@@ -72,56 +71,56 @@
                                     <span class="ball"></span>
                                     <span class="item">园区类型</span>
                                 </div>
-                                <div class="bottom">其它</div>
+                                <div class="bottom">{{parkInfo.parkType}}</div>
                             </div>
                             <div class="card">
                                 <div class="top">
                                     <span class="ball"></span>
                                     <span class="item">园区类别</span>
                                 </div>
-                                <div class="bottom">租赁</div>
+                                <div class="bottom">{{parkInfo.parkCategory}}</div>
                             </div>
                             <div class="card">
                                 <div class="top">
                                     <span class="ball"></span>
                                     <span class="item">园区产业</span>
                                 </div>
-                                <div class="bottom">其他化工、电子信息</div>
+                                <div class="bottom">{{parkInfo.parkIndustry}}</div>
                             </div>
                             <div class="card">
                                 <div class="top">
                                     <span class="ball"></span>
                                     <span class="item">人员规模</span>
                                 </div>
-                                <div class="bottom"><span class="number">1780</span> 人</div>
+                                <div class="bottom"><span class="number">{{parkInfo.staffSize}}</span> 人</div>
                             </div>
                             <div class="card">
                                 <div class="top">
                                     <span class="ball"></span>
                                     <span class="item">工业土地均价</span>
                                 </div>
-                                <div class="bottom"><span class="number">17</span>万/亩</div>
+                                <div class="bottom"><span class="number">{{parkInfo.gyLandPrice}}</span>万/亩</div>
                             </div>
                             <div class="card">
                                 <div class="top">
                                     <span class="ball"></span>
                                     <span class="item">工业土地供应量</span>
                                 </div>
-                                <div class="bottom"><span class="number">170</span>亩</div>
+                                <div class="bottom"><span class="number">{{parkInfo.gyLandSupply}}</span>亩</div>
                             </div>
                             <div class="card">
                                 <div class="top">
                                     <span class="ball"></span>
                                     <span class="item">内容商办土地均价</span>
                                 </div>
-                                <div class="bottom"><span class="number">34</span>万/亩</div>
+                                <div class="bottom"><span class="number">{{parkInfo.sbLandPrice}}</span>万/亩</div>
                             </div>
                             <div class="card">
                                 <div class="top">
                                     <span class="ball"></span>
                                     <span class="item">商办土地供应量</span>
                                 </div>
-                                <div class="bottom"><span class="number">5.1</span>亩</div>
+                                <div class="bottom"><span class="number">{{parkInfo.sbLandSupply}}</span>亩</div>
                             </div>
                         </div>
                     </div>
@@ -162,10 +161,10 @@
                     <span class="underLine-title">推荐物流公司</span>
                 </div>
                 <div class="padding-box">
-                    <div class="card" v-for="item in 12" :key="item">
+                    <div class="card" v-for="item in wuliu" :key="item.name">
                         <img src="../../assets/img/wuliu.jpg" alt="" />
                         <div>
-                            <div class="bb">思益物流</div>
+                            <div class="bb">{{item.name}}</div>
                             <div>常运路线：广东 、汕头、深圳</div>
                         </div>
                     </div>
@@ -192,17 +191,17 @@
                     <span class="underLine-title">企业名录</span>
                 </div>
                 <div class="padding-box">
-                    <div class="table">
-                        <DataTable style="width: 100%" :columns="tableColumns" :border="true" :data="list.items" :highlightCurrentRow="true" :total='list.total'>
+                    <div class="tableheight">
+                        <DataTable style="width: 100%" :columns="tableColumns" :border="true" :data="list.items" :highlightCurrentRow="true" @page-size-change="handlePageSizeChange" @page-change="handlePageChange" :total='list.total'>
                             <template slot="detail" slot-scope="{ row }">
-                                <span class="link" @click="company"> 查看> </span>
+                                <span class="link" @click="getCompanyDetail(row.id)"> 查看> </span>
                             </template>
                         </DataTable>
                     </div>
                 </div>
             </div>
         </div>
-         <el-footer class="main-footer">
+        <el-footer class="main-footer">
             <homeFooter></homeFooter>
         </el-footer>
         <el-dialog title="收货地址" width="1200px" :visible.sync="dialogVisible">
@@ -213,45 +212,45 @@
                 <table class="tableForm" cellspacing=0>
                     <tr>
                         <td class="name">统一社会信用代码</td>
-                        <td class="value">9156673MA6121235</td>
+                        <td class="value">{{companyInfo.agencyCode}}</td>
                         <td class="name">纳税人识别号</td>
-                        <td class="value">9156673MA6121235</td>
+                        <td class="value">{{companyInfo.taxpayerCode}}</td>
                     </tr>
-                     <tr>
+                    <tr>
                         <td class="name">法定代表人</td>
-                        <td class="value">张三</td>
+                        <td class="value">{{companyInfo.legalPerson}}</td>
                         <td class="name">企业类型</td>
-                        <td class="value">民营</td>
+                        <td class="value">{{companyInfo.enterpriseType}}</td>
                     </tr>
-                     <tr>
+                    <tr>
                         <td class="name">成立日期</td>
-                        <td class="value">2001-03-01</td>
+                        <td class="value">{{companyInfo.established}}</td>
                         <td class="name">注册资本</td>
-                        <td class="value">1000万元</td>
+                        <td class="value">{{companyInfo.registeredCapital}}</td>
                     </tr>
-                     <tr>
+                    <tr>
                         <td class="name">联系电话</td>
-                        <td class="value">18203345677</td>
+                        <td class="value">{{companyInfo.contactPhone}}</td>
                         <td class="name">注册地址</td>
-                        <td class="value">四川省-成都市-新都区</td>
+                        <td class="value">{{companyInfo.contactAddress}}</td>
                     </tr>
-                     <tr>
+                    <tr>
                         <td class="name">公司地址</td>
-                        <td class="value">xxxx路xxxx街道xx号</td>
+                        <td class="value">{{companyInfo.companyAddress}}</td>
                         <td class="name">主营行业</td>
-                        <td class="value">现代物流、现代商贸</td>
+                        <td class="value">{{companyInfo.majorBusiness}}</td>
                     </tr>
-                   <tr>
+                    <tr>
                         <td class="name">人员规模</td>
-                        <td class="value">50-100人</td>
+                        <td class="value">{{companyInfo.staffSize}}</td>
                         <td class="name">经营期限至</td>
-                        <td class="value">长期有效</td>
+                        <td class="value">{{companyInfo.operatingTime}}</td>
                     </tr>
-                     <tr>
+                    <tr>
                         <td class="name">主营产品</td>
-                        <td class="value">现代物流、现代商贸</td>
+                        <td class="value">{{companyInfo.mainProducts}}</td>
                         <td class="name">经营范围</td>
-                        <td class="value">从事货物进出口及技术进出口的对外贸易经营；网上销售商品；批发零售食品、日用百货、工艺美术品、家用电器、五金交电、针纺织品、度量衡器具、保健用品、汽车、汽车装饰用品、健身器材、电讯器材、摄影器材、家具、建筑装饰材料、皮革制品；仓储（不含危险品）；物流信息咨询；餐饮服务；组织策划文化交流活动。（依法须经批准的项目，经相关部门批准后方可开展经营活动）。</td>
+                        <td class="value">{{companyInfo.businessScope}}</td>
                     </tr>
                 </table>
             </div>
@@ -269,35 +268,35 @@ const tableColumns = [
     {
         title: "序号",
         align: "center",
-        name: "index",
-        width: "100px",
+        type: "index",
+        width: "80px",
         showOverflow: true,
     },
     {
         title: "企业名称",
         align: "center",
-        name: "name",
-        width: "400px",
+        name: "companyName",
+        width: "200px",
         showOverflow: true,
     },
     {
         title: "注册资金(万元)",
         align: "center",
-        name: "capital",
-        width: "200px",
+        name: "registeredCapital",
+        width: "150px",
         showOverflow: true,
     },
     {
         title: "注册时间",
         align: "center",
-        name: "time",
-        width: "200px",
+        name: "established",
+        width: "150px",
         showOverflow: true,
     },
     {
         title: "经营范围",
         align: "center",
-        name: "fanwei",
+        name: "businessScope",
         // width: "300px",
         showOverflow: true,
     },
@@ -319,6 +318,12 @@ export default {
     },
     data() {
         return {
+            wuliu: [
+                {name: '思益物流'},
+                {name: '顺达物流'},
+                {name: '及时雨物流'},
+                {name: '吉川物流'},
+            ],
             dialogVisible: false,
             imgs: [
                 require("../../assets/img/cm01.png"),
@@ -329,12 +334,12 @@ export default {
             currentPage: 1,
             pageSize: 10,
             select: {
-                currentPage: this.currentPage,
+                pageNum: this.currentPage,
                 pageSize: this.pageSize,
             },
             list: {
                 total: 11,
-                currentPage: 1,
+                pageNum: 1,
                 pageSize: 10,
                 items: [
                     {
@@ -435,10 +440,14 @@ export default {
                     },
                 ],
             },
-            parkId: {
-
-            }
+            parkId: this.$route.query.id,
+            parkInfo: '',
+            companyInfo: '',
         };
+    },
+    created() {
+        this.getParKInfo()
+        this.getCompany()
     },
     methods: {
         getRow(row) {
@@ -448,9 +457,43 @@ export default {
             this.dialogVisible = true;
         },
         async getParKInfo() {
-           let {data} =  await axios.get(
-                `http://loading.spsict.com/china_maps/${this.$route.query.adcode}.json`
-            );
+        //    let { data } =  await axios.get(
+        //         `http://192.168.130.126:10004/park-server/parkController/selectOne?id=${this.parkId}`
+        //     );
+            let {data} = await this.$api.getParKInfo({parkId: this.parkId})
+            this.parkInfo = data
+        },
+        async getCompany() {
+            this.select.pageNum = this.currentPage
+            this.select.pageSize = this.pageSize
+            // let {data} =  await axios.get(
+            //    `http://192.168.130.126:10004/park-server/companyInfoController/selectCompanyByCondition?pageNum=${this.select.pageNum}&pageSize=${this.select.pageSize}&parkId=${this.parkId}` 
+            // )
+            let obj = {
+                pageNum: this.select.pageNum,
+                pageSize: this.select.pageSize,
+                parkId: this.parkId
+            }
+            let {data} = await this.$api.getCompany(obj)
+            let what = data.data
+            this.list.total = what.total
+            this.list.pageNum = what.pageNum
+            this.list.pageSize = what.pageSize
+            this.list.items = what.list
+        },
+        handlePageSizeChange(pageSize) {
+            this.pageSize = pageSize;
+            this.getCompany()
+        },
+        handlePageChange(page) {
+            this.currentPage = page;
+            this.getCompany()
+        },
+        async getCompanyDetail(id) {
+            // let data = await axios.get(`http://192.168.130.126:9304/park-server/companyInfoController/selectOne?id=${id}`)
+            let {data} = await this.$api.getCompanyDetail({id: id})
+            this.companyInfo = data.data
+            this.company()
         }
     },
 };
@@ -589,7 +632,7 @@ export default {
                     margin-right: 16px;
                     // font-weight: 600;
                 }
-                .flexb();
+                .flex(space-around);
             }
         }
     }
@@ -789,13 +832,13 @@ export default {
         width: 100%;
         font-size: 16px;
         tr {
-          width: 100%;
+            width: 100%;
         }
         td {
             height: 56px;
             text-align: left;
-            border-right: 1px solid #E1E6F0;
-            border-bottom: 1px solid #E1E6F0;
+            border-right: 1px solid #e1e6f0;
+            border-bottom: 1px solid #e1e6f0;
             padding: 10px;
         }
         .name {
@@ -804,11 +847,19 @@ export default {
             color: @fc1;
         }
         .value {
-          width: 35%;
+            width: 35%;
             color: @black;
         }
-        border-top:  1px solid #E1E6F0;
-        border-left: 1px solid #E1E6F0;;  
+        border-top: 1px solid #e1e6f0;
+        border-left: 1px solid #e1e6f0;
     }
+    .tableheight {
+        height: 400px;
+        width: 100%;
+        /deep/.data-table {
+            height: 100%;
+        }
+    }
+    
 }
 </style>

@@ -117,7 +117,9 @@ export default {
     },
 
     mounted() {
-        this.jumpIn();
+        this.selectItem({ name: "农副", categoryId: "1" });
+        this.defaultActive = '农副'
+        // this.jumpIn();
     },
     watch: {
         $route: {
@@ -146,7 +148,7 @@ export default {
     methods: {
         async jumpIn() {
             let query = this.$route.query;
-            if (query.productType) {
+            if (query.methods) {
                 let temp = query.productTypeLevelTow;
                 Object.keys(this.$route.query).forEach((item) => {
                     this.select[item] = this.$route.query[item];
@@ -158,8 +160,9 @@ export default {
                 this.type[0].select = this.select.productTypeLevelTow ? this.select.productTypeLevelTow: '全部';
                 this.defaultActive = query.productType;
                 this.getGoodSList(1);
-            } else if (!query.productType) {
+            } else if (!query.methods) {
                 this.selectItem({ name: "农副", categoryId: "1" });
+                this.defaultActive = '农副'
             }
         },
         handlePageSizeChange(pageSize) {

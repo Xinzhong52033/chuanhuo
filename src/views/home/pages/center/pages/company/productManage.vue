@@ -4,59 +4,55 @@
             <div @click="select = '已上架'" :class="select == '已上架' ? 'select' : ''">
                 已上架
             </div>
-            <div @click="select = '待审核'" :class="select == '待审核' ? 'select' : ''">
-                待审核
-            </div>
-            <div @click="select = '审核失败'" :class="select == '审核失败' ? 'select' : ''">
-                审核失败
-            </div>
             <div @click="select = '已下架'" :class="select == '已下架' ? 'select' : ''">
                 已下架
             </div>
             <el-button size="mini" type="primary" style="margin-left: auto">新增</el-button>
         </div>
         <div class="table">
-            <DataTable :height="650*$widthCoefficient" style="width: 100%" :columns="tableColumns" :border="true" :data="list.items" :total="list.total">
+            <DataTable style="width: 100%" :columns="tableColumns" :border="true" :data="list.items" :total="list.total">
                 <template slot="option" slot-scope="{ row }">
                     <div class="option">
-                        <div class="check button" @click="openDialog"><i class="el-icon-document"></i></div>
-                        <div class="edit button" @click="openDialog"><i class="el-icon-edit"></i></div>
+                        <div class="check button" @click="openDialog"><i class="iconfont icon-xiangqing"></i></div>
+                        <div class="edit button" @click="openDialog"><i class="iconfont icon-bianji"></i></div>
                         <div class="download button " @click="openDialog">
-                            <i class="el-icon-folder-add"></i>
+                            <i class="iconfont icon-xiajia"></i>
                         </div>
-                        <div class="delete button" @click="openDialog"><i class="el-icon-delete"></i></div>
+                        <div class="delete button" @click="openDialog"><i class="iconfont icon-shanchu"></i></div>
                     </div>
                 </template>
             </DataTable>
         </div>
-        <FormDialog title="编辑商品" ref="dialog" size="big" class="form-dialog">
+        <FormDialog title="编辑商品" ref="dialog" size="big" class="form-dialog" @submit="editProduct">
             <el-form ref="form" :model="form" label-position="top" label-width="100px" size="medium" :inline='true' class="demo-ruleForm">
                 <div class="info-title">
                     <div class="square"></div>
                     <span>基础信息</span>
                 </div>
                 <div>
-                    <el-form-item label="商品图" class="imgrow">
-                        <img class="img" src="@/assets/img/goods1.jpg" alt="">
-                        <img class="img" src="@/assets/img/goods1.jpg" alt="">
-                        <img class="img" src="@/assets/img/goods1.jpg" alt="">
-                        <span class="add-img img">
-                            <i class="el-icon-plus"></i>
-                        </span>
+                    <el-form-item label="商品图" prop='commodity.icon' class="imgrow"  :rules="{ required: true, message: '请上传图片', trigger: 'change'}">
+                        <div class="img-outer" v-for="(item, index) in imgs" :key='index'>
+                            <img class="img" :src="item" alt="">
+                            <i @click="deleteImg(index)" class="el-icon-remove delete"></i>
+                        </div>
+                        <el-upload class="upload-demo" action="" :http-request="httpRequest" :before-upload="beforeUpload" :show-file-list="false">
+                            <span class="add-img img">
+                                <i class="el-icon-plus"></i>
+                            </span>
+                        </el-upload>
                         <span class="tips">注：最多可选4张图片，支持jpg、png、jpeg、bmp格式，大小不超过5M。</span>
                     </el-form-item>
                 </div>
                 <div class="row">
-                    <el-form-item label="商品名">
-                        <el-input v-model="form.psd"></el-input>
+                    <el-form-item label="商品名"  prop="commodity.commodityName" :rules="{ required: true, message: '请输入商品名', trigger: 'blur'}">
+                        <el-input v-model="form.commodity.commodityName" ></el-input>
                     </el-form-item>
-                    <el-form-item label="价格">
-                        <el-input v-model="form.psd" class="price-input">
-                            <span slot="append" class="slot">元/吨</span>
+                    <el-form-item label="价格（元）" prop="commodityDetails.commodityPrice" :rules="{ required: true, message: '请输入', trigger: 'blur'}">
+                        <el-input  style="width:" v-model="form.commodityDetails.commodityPrice" >
                         </el-input>
                     </el-form-item>
                     <el-form-item label="提货方式">
-                        <el-select v-model="value" placeholder="请选择" style="width: 100%">
+                        <el-select v-model="form.commodityDetails.shoppingIdeas" placeholder="请选择" style="width: 100%">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
@@ -64,19 +60,19 @@
                 </div>
                 <div class="row">
                     <el-form-item label="交易方式">
-                        <el-select v-model="value" placeholder="请选择" style="width: 100%">
+                        <el-select v-model="form.commodityDetails.meansTransaction" placeholder="请选择" style="width: 100%">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="支付方式">
-                        <el-select v-model="value" placeholder="请选择" style="width: 100%">
+                        <el-select v-model="form.commodityDetails.paymentMethod" placeholder="请选择" style="width: 100%">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="库存">
-                        <el-input v-model="form.psd"></el-input>
+                        <el-input v-model="form.commodityDetails.commodityStock"></el-input>
                     </el-form-item>
                 </div>
                 <div class="info-title">
@@ -85,31 +81,29 @@
                 </div>
                 <div class="row">
                     <el-form-item label="商品大类">
-                        <el-input v-model="form.psd"></el-input>
+                        <el-input v-model="form.commodity.categoryId"></el-input>
                     </el-form-item>
                     <el-form-item label="品牌">
-                        <el-input v-model="form.psd"></el-input>
+                        <el-input v-model="form.commodityDetails.commodityBrand"></el-input>
                     </el-form-item>
                     <el-form-item label="地区">
-                        <el-cascader clearable="" v-model="value" style="width: 100%" :options="options2" @change="handleChange"></el-cascader>
+                        <el-cascader clearable="" v-model="form.commodityDetails.commodityArea" style="width: 100%" :options="options2" @change="handleChange"></el-cascader>
                     </el-form-item>
                 </div>
                 <div class="row">
-                    <el-form-item label="详细地址">
-                        <el-input v-model="form.psd"></el-input>
-                    </el-form-item>
                     <el-form-item label="规格">
-                        <el-select v-model="value" placeholder="请选择" style="width: 100%">
+                        <el-select v-model="form.commodityDetails.commoditySpecification" placeholder="请选择" style="width: 100%">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="备注">
-                        <el-select v-model="value" placeholder="请选择" style="width: 100%">
+                    <!-- 无字段 -->
+                    <!-- <el-form-item label="备注"> 
+                        <el-select v-model="form.commodityDetails.commoditySpecification" placeholder="请选择" style="width: 100%">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
-                    </el-form-item>
+                    </el-form-item> -->
                 </div>
                 <div class="info-title">
                     <div class="square"></div>
@@ -117,41 +111,36 @@
                 </div>
                 <div class="row">
                     <el-form-item label="仓库名称">
-                        <el-input v-model="form.psd"></el-input>
+                        <el-input v-model="form.warehouseDetails.warehouseName"></el-input>
                     </el-form-item>
                     <el-form-item label="面积">
-                        <el-input v-model="form.psd"></el-input>
+                        <el-input v-model="form.warehouseDetails.warehouseSize"></el-input>
                     </el-form-item>
                     <el-form-item label="类型">
-                        <el-cascader clearable="" v-model="value" style="width: 100%" :options="options2" @change="handleChange"></el-cascader>
+                        <el-cascader clearable="" v-model="form.warehouseDetails.warehouseType" style="width: 100%" :options="options2" @change="handleChange"></el-cascader>
                     </el-form-item>
                 </div>
                 <div class="row">
+                     <!-- 无字段 -->
                     <el-form-item label="服务商">
-                        <el-input v-model="form.psd"></el-input>
+                        <el-input v-model="form.warehouseDetails.warehouseType"></el-input>
                     </el-form-item>
                     <el-form-item label="联系人">
-                        <el-select v-model="value" placeholder="请选择" style="width: 100%">
+                        <el-select v-model="form.warehouseDetails.warehouseAdministrator" placeholder="请选择" style="width: 100%">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="联系电话">
-                        <el-select v-model="value" placeholder="请选择" style="width: 100%">
+                        <el-select v-model="form.warehouseDetails.administratorPhone" placeholder="请选择" style="width: 100%">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
                 </div>
                 <div class="row">
-                    <el-form-item label="地区">
-                        <el-input v-model="form.psd"></el-input>
-                    </el-form-item>
                     <el-form-item label="详细地址">
-                        <el-select v-model="value" placeholder="请选择" style="width: 100%">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-                        </el-select>
+                        <el-input v-model="form.warehouseDetails.warehouseAddress"></el-input>
                     </el-form-item>
                 </div>
                 <div class="info-title">
@@ -163,6 +152,7 @@
                     <div class="sec-title-name">产地信息</div>
                     <div class="line"></div>
                 </div>
+                <!-- 无字段 -->
                 <div class="row">
                     <el-form-item label="公司名称">
                         <el-input v-model="form.psd"></el-input>
@@ -192,13 +182,13 @@
                     </el-form-item>
                 </div>
             </el-form>
-             <div class="sec-title">
-                    <div class="sec-title-name">产品流向</div>
-                    <div class="line"></div>
-                </div>
+            <div class="sec-title">
+                <div class="sec-title-name">产品流向 </div>
+                <div class="line"></div>
+            </div>
             <el-form ref="form2" :model="form" label-position="left" label-width="80px" size="medium" :inline='true' class="demo-form-inline">
                 <el-timeline style="margin-top: 20px">
-                    <el-timeline-item type="success" icon='el-icon-location'>
+                    <el-timeline-item type="success">
                         <div class="row-leftlabel">
                             <el-form-item label="选择节点">
                                 <el-input v-model="form.psd" style="width: 300px"></el-input>
@@ -255,13 +245,14 @@
 <script>
 import DataTable from "@/components/DataTable.vue";
 import FormDialog from "@/components/FormDialog.vue";
-let $widthCoefficient =  document.documentElement.clientWidth / 1920;
+let $widthCoefficient = document.documentElement.clientWidth / 1920;
+import axios from "axios";
 const tableColumns = [
     {
         title: "编号",
         align: "center",
         name: "index",
-        width: 50*$widthCoefficient+'px',
+        width: 50 * $widthCoefficient + "px",
         showOverflow: true,
     },
     {
@@ -274,14 +265,14 @@ const tableColumns = [
         title: "库存(吨)",
         align: "center",
         name: "capital",
-        width: 100*$widthCoefficient+'px',
+        width: 100 * $widthCoefficient + "px",
         showOverflow: true,
     },
     {
         title: "发货/自提仓库",
         align: "center",
         name: "send",
-        width: 120*$widthCoefficient+'px',
+        width: 120 * $widthCoefficient + "px",
         showOverflow: false,
     },
     {
@@ -294,35 +285,35 @@ const tableColumns = [
         title: "浏览量",
         align: "center",
         name: "watch",
-        width: 100*$widthCoefficient+'px',
+        width: 100 * $widthCoefficient + "px",
         showOverflow: true,
     },
     {
         title: "联系人",
         align: "center",
         name: "concact",
-        width: 120*$widthCoefficient+'px',
+        width: 120 * $widthCoefficient + "px",
         showOverflow: true,
     },
     {
         title: "联系电话",
         align: "center",
         name: "phone",
-        width: 120*$widthCoefficient+'px',
+        width: 120 * $widthCoefficient + "px",
         showOverflow: true,
     },
     {
         title: "创建日期",
         align: "center",
         name: "time",
-        width: 100*$widthCoefficient+'px',
+        width: 100 * $widthCoefficient + "px",
         showOverflow: false,
     },
     {
         title: "操作",
         align: "center",
         name: "__slot:option",
-        width: 200*$widthCoefficient+'px',
+        width: 200 * $widthCoefficient + "px",
         showOverflow: true,
     },
 ];
@@ -604,7 +595,63 @@ export default {
                 },
             ],
             form: {
-                psd: "",
+                commodity: {
+                    commodityId: "",
+                    categoryId: "",
+                    commodityName: "",
+                    pageviews: "",
+                    commodityLabel: "",
+                    commodityDesc: "",
+                    userId: "",
+                    commodityStatus: "",
+                    createTime: "",
+                    isDelete: "",
+                    deleteTime: "",
+                    icon:'',
+                },
+                commodityDetails: {
+                    commodityId: "",
+                    shoppingIdeas: "",
+                    meansTransaction: "",
+                    paymentMethod: "",
+                    commodityStock: "",
+                    commodityPrice: "",
+                    userId: "",
+                    commodityArea: "",
+                    commodityBrand: "",
+                    commoditySpecification: "",
+                    warehouseId: "",
+                    traceabilityId: "",
+                    evaluationId: "",
+                },
+                warehouseDetails: {
+                    warehouseId: "",
+                    warehouseName: "",
+                    warehouseAddress: "",
+                    warehouseAdministrator: "",
+                    administratorPhone: "",
+                    createTime: "",
+                    isDelete: "",
+                    deleteTime: "",
+                    warehouseType: "",
+                    warehouseSize: "",
+                },
+                productTraceability: [
+                    {
+                        nodeId: "",
+                        orderNum: "",
+                        nodeType: "0",
+                        produceName: "",
+                        transportName: "",
+                        warehouseName: "",
+                        remarks: "",
+                        time: "",
+                        transportManner: "",
+                        produceAddress: "",
+                        createTime: "",
+                        commodityId: "",
+                    },
+                ],
             },
             select: "已上架",
             list: {
@@ -767,11 +814,79 @@ export default {
             value: "",
         };
     },
+    computed: {
+        imgs() {
+            if (this.form.icon) {
+                return this.form.icon.split(",");
+            } else {
+                return [];
+            }
+        },
+    },
     methods: {
         openDialog() {
             this.$refs.dialog.show = true;
         },
         handleChange() {},
+        deleteImg(index) {
+            let arr = this.form.icon.split(",");
+            arr.splice(index, 1);
+            this.form.icon = arr.join(",");
+        },
+        // 上传前验证
+        beforeUpload(file) {
+            var testmsg = /^(jpg|png)$/.test(file.name.split(".").pop());
+            if (!testmsg) {
+                this.$message.error("图片格式不正确");
+                return false;
+            }
+            return testmsg;
+        },
+        // 上传
+        httpRequest(data) {
+            let _this = this;
+            let fileObj = data.file;
+            this.fileForm = new FormData();
+            this.fileForm.append("file", fileObj);
+            this.fileForm.append("type", "common");
+            let config = {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                baseURL: "http://192.168.130.126:9303/",
+                withCredentials: true,
+            };
+            axios
+                .post("/sc-server/file/img/upload", this.fileForm, config)
+                .then(async (res) => {
+                    if (res.data.code == 1) {
+                        // 表单添加头像地址
+                        this.userForm.icon = res.data.data.value;
+                    } else if (res.data.code == -4) {
+                        // MSG.errorMsg(res.data.msg);
+                        // router.push({ path: "/login" });
+                        // return false;
+                    } else {
+                        this.$message(res.data.msg);
+                        return false;
+                    }
+                });
+        },
+        editProduct() {
+            this.$refs.form.validate(async (valid) => {
+                if (valid) {
+                    await this.$api.updateUserInfo(this.userForm);
+                    this.$message({
+                        message: "商品添加成功",
+                        type: "success",
+                    });
+                    this.$refs.psdDialog.show = false;
+                } else {
+                    this.$message.error("请填写完整");
+                    return false;
+                }
+            });
+        },
     },
 };
 </script>
@@ -798,7 +913,12 @@ export default {
         border: none;
     }
     .table {
-        height: calc(100% - 110px);
+        // background-color: pink;
+        height: calc(100% - 70px);
+        overflow: hidden;
+        /deep/.data-table {
+            height: 100%;
+        }
         .option {
             .flex(space-around);
             align-items: center;
@@ -838,16 +958,38 @@ export default {
                 .flex();
                 align-items: flex-end;
             }
+            .img-outer {
+                width: 60px;
+                height: 60px;
+                position: relative;
+                border: 1px solid #e1e6f0;
+                .bs();
+                margin-right: 10px;
+                i {
+                    font-size: 18px;
+                    opacity: 0.8;
+                    color: #ff5d6c;
+                    cursor: pointer;
+                    &:hover {
+                        opacity: 0.5;
+                    }
+                    position: absolute;
+                    top: 2px;
+                    right: 2px;
+                }
+            }
             .img {
                 width: 60px;
                 height: 60px;
                 background: #ffffff;
-                border: 1px solid #e1e6f0;
                 opacity: 1;
-                margin-right: 10px;
                 .bs();
             }
             .add-img {
+                cursor: pointer;
+                &:hover {
+                    opacity: 0.8;
+                }
                 display: inline-block;
                 border: 1px dashed #e1e6f0;
                 height: 60px;
@@ -860,6 +1002,9 @@ export default {
                 }
             }
             .tips {
+                height: 16px;
+                line-height: 16px;
+                margin-left: 10px;
                 font-size: 12px;
                 color: @fc1;
                 opacity: 0.7;
@@ -897,7 +1042,7 @@ export default {
             }
         }
         .row-leftlabel {
-          .el-form-item {
+            .el-form-item {
                 width: 37%;
                 &:not(:last-child) {
                     margin-right: 50px;
@@ -923,8 +1068,9 @@ export default {
             opacity: 0.8;
         }
     }
-    /deep/.el-timeline-item__node--normal, /deep/.el-timeline-item__tail {
-      top: 10px;
+    /deep/.el-timeline-item__node--normal,
+    /deep/.el-timeline-item__tail {
+        top: 10px;
     }
 }
 </style>

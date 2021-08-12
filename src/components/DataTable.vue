@@ -94,7 +94,10 @@
         default: false
       },
 
-      height: '',
+      height:{
+        type: String,
+        default: '100%'
+      },
       size: {
         default:'normal'
       },
@@ -181,10 +184,10 @@
   .data-table {
     // margin-top: 20px;
     width: 100%;
-    height: 100%;
-    // display: flex;
-    // flex-direction: column;
-    // box-sizing: border-box;
+    // height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
     /*滚动条样式*/
     //   .el-table__body-wrapper.is-scrolling-none::-webkit-scrollbar {/*滚动条整体样式*/
     //       width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
@@ -204,7 +207,7 @@
     .el-table {
       width: 100%;
       height: 100%;
-      background: transparent !important;
+      // background: transparent !important;
       &::before {
           background-color: transparent;
       }

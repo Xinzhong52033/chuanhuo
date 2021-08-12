@@ -176,3 +176,50 @@ export const sendDemand = (param)=>{
     })
 }
 
+// 获取用户信息
+export const getUserInfo = (param)=>{
+    return request({
+        url:'/sc-server/userController/selectById',
+        method:'get',
+        params:param
+    })
+}
+
+// 修改用户信息
+export const updateUserInfo = (param)=>{
+    return request({
+        url:'/sc-server/userController/updateById',
+        method:'post',
+        data:param
+    })
+}
+
+// 获取园区信息
+export const getParKInfo = (param)=>{
+    return request({
+        url:'/park-server/parkController/selectOne',
+        method:'get',
+        params:param
+    })
+}
+
+
+// 获取公司信息
+export const getCompany = (param)=>{
+    return request({
+        url:'/park-server/companyInfoController/selectCompanyByCondition',
+        method:'get',
+        params:param
+    })
+}
+
+// 获取公司信息
+export const getCompanyDetail = (param)=>{
+    return request({
+        url:'/park-server/companyInfoController/selectOne',
+        method:'get',
+        params:param
+    })
+}
+
+
