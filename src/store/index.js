@@ -7,15 +7,18 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    banerSelect: "home",
+    banerSelect: cookie.get("banerSelect") || "home",
     name: cookie.get("name") || "",
     token: cookie.get("token") || "",
     status: cookie.get("status") || 0,
     type: cookie.get("type") || "",
+    userId: cookie.get("userId") || "",
+    activeName: cookie.get("activeName") || 'home'
   },
   mutations: {
     set_banerSelect: (state, data) => {
       state.banerSelect = data;
+      cookie.set("banerSelect", data);
     },
     // savetoken: function(state, data) {
     //   //赋值
@@ -38,7 +41,11 @@ export default new Vuex.Store({
     set_type: (state, data) => {
       state.type = data;
       cookie.set("type", data);
-    }
+    },
+    set_userId: (state, data) => {
+      state.userId = data;
+      cookie.set("userId", data);
+    },
   },
   actions: {},
   modules: {

@@ -24,10 +24,10 @@
                 </div>
                 <div class="info">
                     <div class="row">
-                        <span>人口：</span><span class="big-number">1608.24</span><span style="margin-left: 5px">万人</span>
+                        <span>人口：</span><span class="big-number">108.37</span><span style="margin-left: 5px">万人</span>
                     </div>
                     <div class="row">
-                        <span>GDP：</span><span class="big-number">17010.13</span><span style="margin-left: 5px"> 亿元</span>
+                        <span>GDP：</span><span class="big-number">1010.13</span><span style="margin-left: 5px"> 亿元</span>
                     </div>
                 </div>
                 <div class="sec-title">
@@ -149,13 +149,14 @@
                 <div>
                     <div class="videoName">攀枝花-钛铁矿</div>
                     <div class="img">
-                        <video src="http://loading.spsict.com/chuanhuo_chuchuan/mvs/%E6%94%80%E6%9E%9D%E8%8A%B1%E9%92%9B%E9%93%81%E7%9F%BF.mp4" autoplay controls></video>
+                        <i class=""></i>
+                        <video src="http://loading.spsict.com/chuanhuo_chuchuan/mvs/%E6%94%80%E6%9E%9D%E8%8A%B1%E9%92%9B%E9%93%81%E7%9F%BF.mp4" poster="http://loading.spsict.com/chuanhuo_chuchuan/imgs/攀枝花钛铁矿.png" controls></video>
                     </div>
                 </div>
                 <div>
-                    <div class="videoName">攀枝花-攀钢</div>
+                    <div class="videoName">攀枝花-钢铁</div>
                     <div class="img">
-                        <video src="http://loading.spsict.com/chuanhuo_chuchuan/mvs/%E6%94%80%E6%9E%9D%E8%8A%B1%E9%92%A2%E6%9D%90.mp4" autoplay controls></video>
+                        <video src="http://loading.spsict.com/chuanhuo_chuchuan/mvs/%E6%94%80%E6%9E%9D%E8%8A%B1%E9%92%A2%E6%9D%90.mp4" poster="http://loading.spsict.com/chuanhuo_chuchuan/imgs/攀枝花钢材.jpg" controls></video>
                     </div>
                 </div>
                 <!-- <div>

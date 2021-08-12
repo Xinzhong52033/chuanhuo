@@ -251,11 +251,17 @@ export default {
                     },
                 ],
             ],
+            commodityId:this.$route.query.commodityId || '1',
+            goodDetail: {}
         };
     },
     methods: {
         getRow(row) {
             console.log(row)
+        },
+        async getGoodDetail() {
+            let {data} = await this.$api.getGoodDetail({commodityId: this.commodityId})
+            this.goodDetail = data
         }
     },
     computed: {

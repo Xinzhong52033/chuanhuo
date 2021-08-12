@@ -5,7 +5,7 @@ import 'lib-flexible/flexible'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import "./rem.js"
+// import "./rem.js"
 import _ from 'lodash'
 import echarts from 'echarts'
 import * as api from '@/utils/api'
@@ -15,7 +15,7 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css';
 import VueCookies from 'vue-cookies'
 import Vuex from 'vuex'
-
+import dayjs from 'dayjs'
 Vue.use(Vuex)
 Vue.use(VueCookies)
 Vue.config.productionTip = false
@@ -30,8 +30,8 @@ Vue.prototype.$replaceLoadingElement = function (instance) {
   })
   return loading
 }
-Vue.prototype.$widthCoefficient = document.documentElement.clientWidth / 1920 //widthCoefficient数字系数,用于组件中无法动态变化大小的情况
-// Vue.prototype.$widthCoefficient = 1 //widthCoefficient数字系数,用于组件中无法动态变化大小的情况
+// Vue.prototype.$widthCoefficient = document.documentElement.clientWidth / 1920 //widthCoefficient数字系数,用于组件中无法动态变化大小的情况
+Vue.prototype.$widthCoefficient = 1 //widthCoefficient数字系数,用于组件中无法动态变化大小的情况
 new Vue({
   router,
   store,

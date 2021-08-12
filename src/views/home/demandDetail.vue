@@ -8,11 +8,11 @@
             </div>
             <div class="content padding-box">
                 <div class="left">
-                    <div class="want">求购沫煤</div>
-                    <div class="time">发布时间：2021-05-27 16:00:00</div>
+                    <div class="want ellipsis" :title="demandDetail.demandTitle">{{demandDetail.demandTitle}}</div>
+                    <div class="time">发布时间：{{demandDetail.createTime}}</div>
                     <div class="tag">
-                        <div>现货/标准品</div>
-                        <div>协议采购(长期采购)</div>
+                        <div>{{demandDetail.commodityStatus}}</div>
+                        <div>{{demandDetail.purchaseType}}</div>
                     </div>
                 </div>
                 <div class="right">
@@ -23,20 +23,23 @@
         </header>
         <div class="outer">
             <div class="section padding-box">
-                <div class="left-top">需求单</div>
+                <div class="left-top">需求单
+                    <div class="triangle">
+                    </div>
+                </div>
                 <div class="info">
                     <div class="info-title">
                         <div class="square"></div>
                         <span>基础信息</span>
                     </div>
                     <div class="details">
-                        <div><span class="name">截止日期</span><span>2021-06-10 16:10:00</span></div>
-                        <div><span class="name">类型</span><span>现货/标准品</span></div>
-                        <div><span class="name">采购类型</span><span>协议采购（长期采购）</span></div>
-                        <div><span class="name">发票要求</span><span>增值税专票（不限开具方）</span></div>
-                        <div><span class="name">报价要求</span><span>报价含税，报价需要包含运费</span></div>
-                        <div><span class="name">收货地址</span><span>成都市成华区二仙桥某某社区</span></div>
-                        <div><span class="name">期望收货日期</span><span>2021-06-10 16:10:00 至 2021-06-30 16:10:00</span></div>
+                        <div><span class="name">截止日期</span><span>{{demandDetail.endTime}}</span></div>
+                        <div><span class="name">类型</span><span>{{demandDetail.commodityStatus}}</span></div>
+                        <div><span class="name">采购类型</span><span>{{demandDetail.purchaseType}}</span></div>
+                        <div><span class="name">发票要求</span><span>{{demandDetail.invoiceClaim}}</span></div>
+                        <div><span class="name">报价要求</span><span v-if="demandDetail.quotationRequest">{{demandDetail.quotationRequest}}</span></div>
+                        <div><span class="name">收货地址</span><span>{{demandDetail.receiptAddress}}</span></div>
+                        <div><span class="name">期望收货日期</span><span>{{demandDetail.expectTime[0]}} 至 {{demandDetail.expectTime[1]}}</span></div>
                     </div>
                 </div>
                 <div class="info">
@@ -45,24 +48,27 @@
                         <span>联系方式</span>
                     </div>
                     <div class="details">
-                        <div><span class="name">联系人</span><span>李易峰</span></div>
-                        <div><span class="name">联系电话</span><span>180****5544<span class="login">登录后查看</span></span></div>
-                        <div><span class="name">公司名称</span><span>达州****有限公司<span class="login">登录后查看</span></span></div>
+                        <div><span class="name">联系人</span><span>{{demandDetail.contactPerson}}</span></div>
+                        <div><span class="name">联系电话</span><span>{{demandDetail.phoneNumber}}</span></div>
+                        <div><span class="name">公司名称</span><span>{{demandDetail.companyName}}</span></div>
                     </div>
                 </div>
                 <div class="info">
                     <div class="info-title">
                         <div class="square"></div>
                         <span>商品清单</span>
-                        <div class="count">合计：<span>￥40,066</span></div>
+                        <div class="count">合计：<span>￥{{total}}</span></div>
                     </div>
                     <div class="table">
-                        <DataTable style="width: 100%" :columns="tableColumns" :border='true' :data="tableData" :highlightCurrentRow="true">
-                            <template slot="number" slot-scope="{row}">
-                                <span class="link"> {{row.number}}</span>
+                        <DataTable :showBottomBar='false' :columns="tableColumns" :border='true' :data="tableData" :highlightCurrentRow="true">
+                             <template slot="index" slot-scope="{row}">
+                                 {{row.index}}
                             </template>
                             <template slot="pre" slot-scope="{row}">
-                                <span class="link"> {{row.pre}}</span>
+                                <span class="link" @click="getRow(row)"> {{row.budget}}</span>
+                            </template>
+                            <template slot="number" slot-scope="{row}">
+                                <span class="link"> {{row.count}}</span>
                             </template>
                         </DataTable>
                     </div>
@@ -85,14 +91,14 @@ const tableColumns = [
     {
         title: "序号",
         align: "center",
-        name: "index",
-        width: "100px",
+        name: "__slot:index",
+        width: "60px",
         showOverflow: true,
     },
     {
         title: "商品名称",
         align: "center",
-        name: "name",
+        name: "commodityName",
         width: "400px",
         showOverflow: true,
     },
@@ -113,7 +119,7 @@ const tableColumns = [
     {
         title: "备注",
         align: "center",
-        name: "remark",
+        name: "remarks",
         // width: "300px",
         showOverflow: true,
     },
@@ -151,124 +157,18 @@ export default {
                 },
             ],
             tableColumns,
-
-            swiperOptions: {
-                slidesPerView: 4,
-                grabCursor: true,
-                spaceBetween: 23,
-                speed: 3000,
+            demandId: this.$route.query.demandId || '',
+            demandDetail: {
+                expectTime: [
+                    '2021-08-01', 
+                    '2021-08-19'
+                ]
             },
-            concactList: [
-                "05-28 15:00:00 邓***联系了该商品所在供应商",
-                "05-28 15:00:00 邓***联系了该商品所在供应商",
-                "05-28 15:00:00 邓***联系了该商品所在供应商",
-                "05-28 15:00:00 邓***联系了该商品所在供应商",
-                "05-28 15:00:00 邓***联系了该商品所在供应商",
-                "05-28 15:00:00 邓***联系了该商品所在供应商",
-            ],
-            imgIndex: 0,
-            activities: [
-                {
-                    title: "仓储信息",
-                    time: "2020-01-01 12:00:00",
-                    info: ["仓库：达州产业园"],
-                    color: "#0bbd87",
-                    type: "success",
-                },
-                {
-                    title: "运输信息",
-                    time: "2020-01-01 12:00:00",
-                    info: [
-                        "运输企业：达州圣达能源运输有限公司",
-                        "运输方式：火车",
-                    ],
-                    color: "#0bbd87",
-                    type: "success",
-                },
-                {
-                    title: "生产信息",
-                    time: "2020-01-01 12:00:00",
-                    info: [
-                        "生产企业：达州圣达能源限公司",
-                        "生产地点：四川省达州市万源市S218与汇通大道东段",
-                    ],
-                    color: "#0bbd87",
-                    type: "success",
-                },
-            ],
-            messages: [
-                [
-                    {
-                        commentId: "2",
-                        commodityId: "1",
-                        userId: "2",
-                        commentTime: "2021-01-01 12:21:00",
-                        commentDesc: "呵呵",
-                        replyId: null,
-                        isDelete: 0,
-                        deleteTime: null,
-                        userName: "阿**强",
-                        mobile: null,
-                    },
-                    {
-                        commentId: "1",
-                        commodityId: "1",
-                        userId: "1",
-                        commentTime: "2021-01-01 12:21:00",
-                        commentDesc: "哈哈",
-                        replyId: "1",
-                        isDelete: 0,
-                        deleteTime: null,
-                        userName: "达州圣达能源限公司",
-                        mobile: "17636222096",
-                    },
-                    {
-                        commentId: "1",
-                        commodityId: "1",
-                        userId: "1",
-                        commentTime: "2021-01-01 12:21:00",
-                        commentDesc: "还有任何问题欢迎咨询",
-                        replyId: "1",
-                        isDelete: 0,
-                        deleteTime: null,
-                        userName: "达州圣达能源限公司",
-                        mobile: "17636222096",
-                    },
-                    {
-                        commentId: "1",
-                        commodityId: "1",
-                        userId: "1",
-                        commentTime: "2021-01-01 12:21:00",
-                        commentDesc: "东西很一般般啊",
-                        replyId: "1",
-                        isDelete: 0,
-                        deleteTime: null,
-                        userName: "阿**强",
-                        mobile: "17636222096",
-                    },
-                ],
-                [
-                    {
-                        commentId: "2",
-                        commodityId: "1",
-                        userId: "2",
-                        commentTime: "2021-01-01 12:21:00",
-                        commentDesc:
-                            "第二次购买，焦炭质量上乘，供应商态度良好，以后继续合作。",
-                        replyId: null,
-                        isDelete: 0,
-                        deleteTime: null,
-                        userName: "无名者",
-                        mobile: null,
-                    },
-                ],
-            ],
+            total: 0,
         };
     },
-    methods: {
-        getRow(row) {
-            console.log(row);
-        },
+    created() {
+        this.getDemandDetail()
     },
     computed: {
         defaultOption() {
@@ -284,6 +184,24 @@ export default {
             };
         },
     },
+    methods: {
+        async getDemandDetail() {
+            let {data} = await this.$api.getDemandDetail({demandId: this.demandId})
+            this.demandDetail = data
+            this.tableData = data.list
+            
+            var temptotal= 0
+            this.tableData.forEach((item, index) => {
+                temptotal += item.budget * item.count
+                item.index = index+1
+            })
+            this.total = temptotal
+            this.demandDetail.expectTime = this.demandDetail.expectTime.split(',')
+        },
+        getRow(row) {
+            console.log(row);
+        },
+    }
 };
 </script>
 
@@ -307,6 +225,7 @@ export default {
             color: #fff;
             .left {
                 .want {
+                    max-width: 500px;
                     font-size: 24px;
                     font-weight: 600;
                     margin-bottom: 20px;
@@ -353,13 +272,13 @@ export default {
     .section {
         margin-top: 40px;
         background-color: #fff;
-        padding: 72px 40px 0 40px;
+        padding: 72px 40px 1px 40px;
         font-size: 16px;
         .bs();
         position: relative;
         .left-top {
             position: absolute;
-            .wh(190px, 42px);
+            .wh(166px, 42px);
             background-color: @yellow;
             font-size: 20px;
             color: white;
@@ -367,6 +286,14 @@ export default {
             line-height: 42px;
             top: 0;
             left: 0;
+            .triangle {
+                .wh(24px, 42px);
+                background: url("../../assets/img/triangle.png");
+                background-size: 100% 100%;
+                position: absolute;
+                right: -24px;
+                top: 0px;
+            }
         }
         .info {
             margin-bottom: 40px;
@@ -394,13 +321,13 @@ export default {
                 }
             }
             .details {
-                .flex();
+                .flexb();
                 flex-wrap: wrap;
                 margin: 20px 0;
                 > div {
                     .flex();
                     align-items: center;
-                    width: 33%;
+                    width: 30%;
                     margin: 10px 0;
                     height: 30px;
                     .name {
@@ -485,5 +412,6 @@ export default {
             background-color: rgba(56, 96, 244, 0.1);
         }
     }
+   
 }
 </style>

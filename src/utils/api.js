@@ -130,3 +130,49 @@ export const getGoodDetail = (param)=>{
         params:param
     })
 }
+
+// 获取需求列表
+export const getDemandList = (param)=>{
+    return request({
+        url:'/sc-server/demandDetailsController/selectDemandDetailByType',
+        method:'get',
+        params:param
+    })
+}
+
+// 留言
+export const sendMessage = (param)=>{
+    return request({
+        url:'/sc-server/commodityCommentController/insertCommodityComment',
+        method:'post',
+        params:param
+    })
+}
+
+// 需求详情
+export const getDemandDetail = (param)=>{
+    return request({
+        url:'/sc-server/demandDetailsController/selectDemandDetailById',
+        method:'get',
+        params:param
+    })
+}
+
+// 获取供应商详情
+export const getCompanyInfo = (param)=>{
+    return request({
+        url:'/sc-server/parkCompanyInfoController/selectOne',
+        method:'get',
+        params:param
+    })
+}
+
+// 发布需求
+export const sendDemand = (param)=>{
+    return request({
+        url:'/sc-server/demandDetailsController/insertDemandDetails',
+        method:'post',
+        data:param
+    })
+}
+

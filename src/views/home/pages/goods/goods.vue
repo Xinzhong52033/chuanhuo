@@ -2,7 +2,7 @@
     <div class="goods">
         <div class="padding-box">
             <div class="top">
-                <leftMenu ref="leftMenu" :menuList='menuList' @selectItem='selectItem' class="left-menu"></leftMenu>
+                <leftMenu ref="leftMenu" :defaultActive='defaultActive' :menuList='menuList' @selectItem='selectItem' class="left-menu"></leftMenu>
                 <div class="right">
                     <selfFilter :list='type' @selectlevelTwo="selectlevelTwo" ref="selfFilter"></selfFilter>
                 </div>
@@ -12,10 +12,10 @@
                 <li v-for="(item, index) in list.items" :key="index">
                     <div class="name">
                         <div class="mb-14 big-black">{{item.commodityName}}</div>
-                        <div>库存：{{item.commodityStock}}</div>
+                        <div>库存：{{item.commodityStock}}{{item.commoditySpecification}}</div>
                     </div>
                     <div class="price">
-                        <span class="big-number">{{item.commodityPrice}}</span> 元/吨
+                        <span class="big-number">{{item.commodityPrice}}</span> 元/{{item.commoditySpecification}}
                     </div>
                     <div class="where">
                         <div class="mb-14">发货/自提仓库：{{item.warehouseName}}</div>
@@ -51,27 +51,31 @@ export default {
             menuList: [
                 { name: "农副", categoryId: "1" },
                 { name: "能源", categoryId: "2" },
-                { name: "化工", categoryId: "3" },
-                { name: "金属", categoryId: "4" },
+                { name: "金属", categoryId: "3" },
+                { name: "化工", categoryId: "4" },
                 { name: "建材", categoryId: "5" },
             ],
-            goodsList: [
-            ],
+            nameMap: {
+                农副: "1",
+                能源: "2",
+                金属: "3",
+                化工: "4",
+                建材: "5",
+            },
+            goodsList: [],
             currentPage: 1,
             pageSize: 10,
             type: [
                 {
                     classification: "品类",
-                    items: [
-                    ],
+                    items: [],
                     stateChange: false,
                     state: true,
                     select: "全部",
                 },
                 {
                     classification: "发货地",
-                    items: [
-                    ],
+                    items: [],
                     stateChange: false,
                     state: true,
                     select: "全部",
@@ -85,22 +89,22 @@ export default {
                 },
                 {
                     classification: "供应商",
-                    items: [
-                    ],
+                    items: [],
                     stateChange: false,
                     state: true,
                     select: "全部",
                 },
             ],
             select: {
-                pageNum: '',
-                pageSize: '',
+                pageNum: "",
+                pageSize: "",
                 productType: "农副",
-                productTypeLevelTow: '',
-                deliveryPlace:'',
-                brand:'',
-                supplier: '',
+                productTypeLevelTow: "",
+                deliveryPlace: "",
+                brand: "",
+                supplier: "",
                 sort: "1",
+                categoryId: "1",
             },
             list: {
                 total: 15,
@@ -108,16 +112,22 @@ export default {
                 pageSize: 10,
                 items: {},
             },
-            // productType: this.$route.param.productType,
-            // productTypeLevelTow: this.$route.param.productTypeLevelTow,
+            defaultActive: "",
         };
     },
-    created() {
-        console.log(2222, this.$route.query)
-    },  
+
     mounted() {
-        this.selectItem({ name: '农副', categoryId: 1 });
-        this.getGoodSList();
+        this.jumpIn();
+    },
+    watch: {
+        $route: {
+            handler(newValue, oldValue) {
+                if (newValue.query.methods) {
+                    this.jumpIn();
+                }
+            },
+            deep: true,
+        },
     },
     computed: {
         productTypeLevelTowValue() {
@@ -131,19 +141,36 @@ export default {
         },
         supplierValue() {
             return this.type[3].select == "全部" ? "" : this.type[3].select;
-        }
+        },
     },
     methods: {
+        async jumpIn() {
+            let query = this.$route.query;
+            if (query.productType) {
+                let temp = query.productTypeLevelTow;
+                Object.keys(this.$route.query).forEach((item) => {
+                    this.select[item] = this.$route.query[item];
+                });
+                await this.getType(query.categoryId);
+                //获取到分项后再赋值第二个选项
+                this.select.productTypeLevelTow = temp;
+                // 设置选中状态
+                this.type[0].select = this.select.productTypeLevelTow ? this.select.productTypeLevelTow: '全部';
+                this.defaultActive = query.productType;
+                this.getGoodSList(1);
+            } else if (!query.productType) {
+                this.selectItem({ name: "农副", categoryId: "1" });
+            }
+        },
         handlePageSizeChange(pageSize) {
             this.pageSize = pageSize;
-            this.getGoodSList()
+            this.getGoodSList();
         },
         handlePageChange(page) {
-           this.currentPage = page
-           this.getGoodSList()
+            this.currentPage = page;
+            this.getGoodSList();
         },
         checkDetail(item) {
-            console.log(item)
             var newPage = this.$router.resolve({
                 path: "/goodDetail",
                 query: { commodityId: item.commodityId },
@@ -153,7 +180,7 @@ export default {
         selectItem(param) {
             this.select.productType = param.name;
             this.getType(param.categoryId);
-            this.getGoodSList(1)
+            this.getGoodSList(1);
         },
         async getType(categoryId) {
             let { data } = await this.$api.getGoodType({
@@ -170,6 +197,7 @@ export default {
                     select: "全部",
                 });
             });
+            console.log(6, this.type);
             this.$refs.selfFilter.checkHight();
         },
         async getGoodSList(pageNum) {
@@ -179,19 +207,24 @@ export default {
                 productType: this.select.productType,
                 productTypeLevelTow: this.productTypeLevelTowValue,
                 deliveryPlace: this.deliveryPlaceValue,
-                brand:this.brandValvue,
+                brand: this.brandValvue,
                 supplier: this.supplierValue,
                 sort: this.select.sort,
-            }
-            let {data} = await this.$api.getGoodSList(obj)
-            this.list.total = data.total,
-            this.list.currentPage = data.pageNum,
-            this.list.pageSize = data.pageSize,
-            this.list.items = data.list
+                categoryId: this.nameMap[this.select.productType],
+            };
+            this.$router.push({
+                path: "goods",
+                query: obj,
+            });
+            let { data } = await this.$api.getGoodSList(obj);
+            (this.list.total = data.total),
+                (this.list.currentPage = data.pageNum),
+                (this.list.pageSize = data.pageSize),
+                (this.list.items = data.list);
         },
         selectlevelTwo() {
-            this.getGoodSList(1)
-        }
+            this.getGoodSList(1);
+        },
     },
 };
 </script>
@@ -265,7 +298,7 @@ export default {
     }
     .pagenation {
         text-align: center;
-        padding-bottom: 60px;
+        padding-bottom: 30px;
     }
 }
 </style>

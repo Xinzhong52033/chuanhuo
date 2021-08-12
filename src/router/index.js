@@ -52,11 +52,11 @@ const routes = [
         name:"demand",
         component: () => import('../views/home/pages/demand/demand.vue'),
       },
-      {
-        path:'demandDetail',
-        name:"demandDetail",
-        component: () => import('../views/home/pages/demand/demandDetail.vue'),
-      },
+      // {
+      //   path:'demandDetail',
+      //   name:"demandDetail",
+      //   component: () => import('../views/home/pages/demand/demandDetail.vue'),
+      // },
       {
         path:'sendDemand',
         name:"sendDemand",
@@ -134,12 +134,12 @@ const routes = [
           },
           {
             path:'/companyCollect',
-            name:"collect",
+            name:"companyCollect",
             component: () => import('../views/home/pages/center/pages/company/companyCollect.vue'),
           },
           {
             path:'/companyDemandManage',
-            name:"demandManage",
+            name:"companyDemandManage",
             component: () => import('../views/home/pages/center/pages/company/companyDemandManage.vue'),
           },
         ],

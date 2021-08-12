@@ -9,12 +9,12 @@
 <script>
 
 import homeFooter from './views/layout/footer.vue'
-// import { setRem } from './rem.js'
+import { setRem } from './rem.js'
 export default {
   components: {
     homeFooter
   },
-//   name: 'App',
+  name: 'App',
 //   created () {
 //     setRem()
 //     window.addEventListener('resize', this.resizeHandler)
@@ -25,6 +25,7 @@ export default {
 //   methods: {
 //     resizeHandler () {
 //       window.screenWidth = document.body.clientWidth
+//       location.reload() 
 //       setRem()
 //     }
 //   }
@@ -37,10 +38,11 @@ export default {
 @import './style/font.less';
 @import './assets/iconfont/iconfont.css';
 #app {
-  font-size: 14px;
-  // font-size: 0.16rem;
+  // font-size: 14px;
+  font-size: 0.16rem;
   color: @fc1;
   width: 100vw;
+  .wh(100%,100%);
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

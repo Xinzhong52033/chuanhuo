@@ -94,11 +94,7 @@
         default: false
       },
 
-      height: {
-        // type: Number,
-        default:'100%'
-      },
-
+      height: '',
       size: {
         default:'normal'
       },
@@ -185,6 +181,7 @@
   .data-table {
     // margin-top: 20px;
     width: 100%;
+    height: 100%;
     // display: flex;
     // flex-direction: column;
     // box-sizing: border-box;
@@ -206,6 +203,7 @@
     //   }
     .el-table {
       width: 100%;
+      height: 100%;
       background: transparent !important;
       &::before {
           background-color: transparent;

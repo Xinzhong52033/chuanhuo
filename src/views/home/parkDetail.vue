@@ -49,11 +49,11 @@
                     <div>
                         <div class="underLine-title">联系方式</div>
                         <div class="contact">
-                            <span class="item"><i class="el-icon-user"></i>王*钢</span>
+                            <span class="item"><i class="iconfont icon-a-zu1350"></i>王*钢</span>
                             <span>|</span>
-                            <span class="item"><i class="el-icon-phone-outline"></i>135****7350</span>
+                            <span class="item"><i class="iconfont icon-dianhua"></i>135****7350</span>
                             <span>|</span>
-                            <span class="item"><i class="el-icon-message"></i>1435871767@qq.com</span>
+                            <span class="item"><i class="iconfont icon-youxiang"></i>1435871767@qq.com</span>
                         </div>
                     </div>
                 </div>
@@ -264,6 +264,7 @@ import DataTable from "@/components/DataTable.vue";
 import transparentHeader from "../layout/transparentHeader.vue";
 import Pagenation from "@/components/pagenation.vue";
 import homeFooter from '@/views/layout/footer.vue'
+import axios from 'axios'
 const tableColumns = [
     {
         title: "序号",
@@ -434,6 +435,9 @@ export default {
                     },
                 ],
             },
+            parkId: {
+
+            }
         };
     },
     methods: {
@@ -443,6 +447,11 @@ export default {
         company() {
             this.dialogVisible = true;
         },
+        async getParKInfo() {
+           let {data} =  await axios.get(
+                `http://loading.spsict.com/china_maps/${this.$route.query.adcode}.json`
+            );
+        }
     },
 };
 </script>
@@ -538,10 +547,12 @@ export default {
     .introduce {
         height: 640px;
         background-color: @bc2;
-        position: relative;
+        .padding-box {
+            position: relative;
+        }
         .carousel {
             .wh(720px, 540px);
-            background-color: pink;
+            // background-color: pink;
             position: absolute;
             top: 50%;
             transform: translate(0, -50%);
@@ -559,7 +570,7 @@ export default {
             background: #ffffff;
             box-shadow: 0px 5px 20px rgba(56, 96, 244, 0.2);
             top: 50%;
-            right: 240px;
+            right: 20px;
             transform: translate(0, -50%);
             .flexb();
             flex-direction: column;
@@ -576,7 +587,7 @@ export default {
                 i {
                     color: @blue;
                     margin-right: 16px;
-                    font-weight: 600;
+                    // font-weight: 600;
                 }
                 .flexb();
             }

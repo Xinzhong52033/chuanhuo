@@ -1,7 +1,7 @@
 <template>
   <div class="leftMenu">
     <el-menu
-      default-active="农副"
+      :default-active="defaultActive"
       class="el-menu-vertical-demo"
     >
       <el-menu-item v-for="(item, index) in menuList" @click="selectItem(item)" :key="item.name" :index="item.name">
@@ -16,6 +16,10 @@
 export default {
   name: "leftMenu",
   props: {
+      defaultActive: {
+        type: String,
+        default: '农副'
+      },
       menuList: {
           type: Array,
           default: () => []

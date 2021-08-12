@@ -13,29 +13,30 @@
                     <div class="item-top">
                         <div class="demand">
                             <div class="want big-black">
-                                {{item.name}}
+                                <span class="title-width ellipsis ">{{item.demandTitle}}</span><span class="tags">{{item.commodityStatus}}</span> <span class="tags">{{item.purchaseType}}</span>
                             </div>
-                            <div class="number">
+                            <!-- <div class="number">
                                 采购数量：{{item.count}}吨
-                            </div>
+                            </div> -->
                         </div>
+                        <div></div>
                         <div>
-                            <span class="big-number">{{item.price}}</span> 元/吨
+                            <span class="big-number">{{item.total}}</span> 元
                         </div>
                     </div>
                     <div class="item-top item-bottom">
                         <div class="demand">
-                            <div class="want big-black">
-                                商品清单：{{item.list}}
+                            <div class="want big-black ellipsis">
+                                商品清单：{{item.wantList}}
                             </div>
                             <div class="time">
-                                发布时间：{{item.fabutime}}
+                                发布时间：{{item.createTime}}
                             </div>
                             <div class="time">
-                                截止时间：{{item.endtime}}
+                                截止时间：{{item.endTime}}
                             </div>
                         </div>
-                        <div class="detail" @click="checkDetail">
+                        <div class="detail" @click="checkDetail(item.demandId)">
                             查看详情
                         </div>
                     </div>
@@ -63,13 +64,13 @@ export default {
     },
     data() {
         return {
-            orderType: ["综合排序", "库存", "价格"],
+            orderType: ["综合排序", "发布时间", "截止时间"],
             order: 1,
             menuList: [
                 { name: "农副", categoryId: "1" },
                 { name: "能源", categoryId: "2" },
-                { name: "化工", categoryId: "3" },
-                { name: "金属", categoryId: "4" },
+                { name: "金属", categoryId: "3" },
+                { name: "化工", categoryId: "4" },
                 { name: "建材", categoryId: "5" },
             ],
             goodsList: [
@@ -86,7 +87,7 @@ export default {
                     select: "全部",
                 },
                 {
-                    classification: "发货地",
+                    classification: "类型",
                     items: [
                     ],
                     stateChange: false,
@@ -94,14 +95,23 @@ export default {
                     select: "全部",
                 },
                 {
-                    classification: "品牌",
+                    classification: "贸易类型",
                     items: [],
                     stateChange: false,
                     state: true,
                     select: "全部",
                 },
                 {
-                    classification: "供应商",
+                    classification: "采购类型",
+                    items: [
+                        
+                    ],
+                    stateChange: false,
+                    state: true,
+                    select: "全部",
+                },
+                {
+                    classification: "价格说明",
                     items: [
                         
                     ],
@@ -115,9 +125,10 @@ export default {
                 pageSize: '',
                 productType: "农副",
                 productTypeLevelTow: '',
-                deliveryPlace:'',
-                brand:'',
-                supplier: '',
+                type: '',
+                tradingType: '',
+                purchaseType: '',
+                priceInstruction: '',
                 sort: "1",
             },
             list: {
@@ -136,21 +147,20 @@ export default {
         productTypeLevelTowValue() {
             return this.type[0].select == "全部" ? "" : this.type[0].select;
         },
-        deliveryPlaceValue() {
-            return this.type[2].select == "全部" ? "" : this.type[2].select;
-        },
-        brandValvue() {
+        typeValue() {
             return this.type[1].select == "全部" ? "" : this.type[1].select;
         },
-        supplierValue() {
+        tradingType() {
+            return this.type[2].select == "全部" ? "" : this.type[2].select;
+        },
+        purchaseTypeValvue() {
             return this.type[3].select == "全部" ? "" : this.type[3].select;
+        },
+        priceInstructionValue() {
+            return this.type[4].select == "全部" ? "" : this.type[4].select;
         }
     },
     methods: {
-        checkDetail() {
-            var newPage = this.$router.resolve({path: '/detail', params: {id: 12313131231}})
-            window.open(newPage.href,'_blank')
-        },
         handlePageSizeChange(pageSize) {
             this.pageSize = pageSize;
             this.getGoodSList()
@@ -159,12 +169,9 @@ export default {
            this.currentPage = page
            this.getGoodSList()
         },
-        checkDetail() {
-            var newPage = this.$router.resolve({
-                path: "/goodDetail",
-                params: { id: 12313131231 },
-            });
-            window.open(newPage.href, "_blank");
+        checkDetail(id) {
+            var newPage = this.$router.resolve({path: '/detail', query: {demandId: id}})
+            window.open(newPage.href,'_blank')
         },
         selectItem(param) {
             this.select.productType = param.name;
@@ -194,16 +201,31 @@ export default {
                 pageSize: this.pageSize,
                 productType: this.select.productType,
                 productTypeLevelTow: this.productTypeLevelTowValue,
-                deliveryPlace: this.deliveryPlaceValue,
-                brand:this.brandValvue,
-                supplier: this.supplierValue,
+                type: this.typeValue,
+                tradingType: this.tradingTypeValue,
+                purchaseType: this.purchaseTypeValvue,
+                priceInstruction: this.priceInstructionValue,
                 sort: this.select.sort,
             }
-            let {data} = await this.$api.getGoodSList(obj)
+            let {data} = await this.$api.getDemandList(obj)
             this.list.total = data.total,
             this.list.currentPage = data.pageNum,
             this.list.pageSize = data.pageSize,
             this.list.items = data.list
+            // 商品清单和总额
+            var wantList = ''  
+            var total = 0
+            this.list.items.forEach(item => {
+                total = 0
+                wantList = ''
+                item.list.forEach(v=> {
+                    total += v.budget * v.count
+                    wantList += v.commodityName + v.count + v.unit + " " 
+                }) 
+                item.total = total
+                item.wantList = wantList
+            })
+            console.log(this.list.items)
         },
         selectlevelTwo() {
             this.getGoodSList(1)
@@ -259,7 +281,25 @@ export default {
                 .demand {
                     background-color: transparent;
                     .want {
-                        margin-bottom: 10px;
+                        // margin-bottom: 10px;
+                        .title-width {
+                            max-width: 210px;
+                            margin-right: 5px
+                        }
+                        .flex();
+                        align-items: center;
+                        .tags {
+                            font-weight: normal;
+                            margin-left: 5px;
+                            margin-right: 5px;
+                            font-size: 12px;
+                            display: inline-block;
+                            padding: 2px 5px;
+                            color: rgba(56, 96, 244, 1);
+                            background: rgba(56, 96, 244, 0.1);
+                            border-radius: 0px 3px 3px 3px;
+                            opacity: 0.8;
+                        }
                     }
                 }
             }
@@ -267,8 +307,10 @@ export default {
                 height: calc(100% - 100px);
                 background: @bc2;
                 .want {
+                    width: 450px;
                     font-size: 16px;
                     color: @black;
+                    margin-bottom: 10px;
                 }
                 .time {
                     font-size: 14px;
@@ -305,7 +347,7 @@ export default {
     }
     .pagenation {
        text-align: center;
-       margin-bottom: 60px;
+       margin-bottom: 30px;
     }
 }
 </style>

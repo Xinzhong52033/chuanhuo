@@ -48,9 +48,10 @@ export default {
                     // 或取每一行的高度
                     // var height =
                     //     this.$refs[`items${e.classification}`][0].offsetHeight;
+                    // console.log(555, this.$refs)
                     e.stateChange =
                         this.$refs[`items${e.classification}`][0].offsetHeight >
-                        this.$refs.inner[0].offsetHeight
+                        64
                             ? true
                             : false;
                     e.state = false;

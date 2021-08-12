@@ -27,14 +27,14 @@ module.exports = {
       css:{},
       postcss:{
         plugins:[require('postcss-px2rem')({
-          remUnit:75
+          remUnit: 100
         })]
       }
     }
   },
   configureWebpack: {
     externals: {
-      'AMap': 'AMap'
-    }
+      'AMap': 'AMap',
+    },
   }
 }

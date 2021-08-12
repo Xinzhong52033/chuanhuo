@@ -42,10 +42,10 @@
                     能源产品
                 </li>
                 <li @click="jump('item3')" :class="{'scroll-to': scroll == 2}">
-                    化工产品
+                    金属
                 </li>
                 <li @click="jump('item4')" :class="{'scroll-to': scroll == 3}">
-                    金属
+                    化工产品
                 </li>
                 <li @click="jump('item5')" :class="{'scroll-to': scroll == 4}">
                     建材产品
@@ -57,7 +57,7 @@
             <div class="padding-box">
                 <div class="title">
                     <img src="../../../assets/img/title.png" alt="">
-                    <span>{{item.type == 1?'农副产品':item.type==2?'能源产品':item.type==3?'化工产品':item.type==4?'金属':'建材产品'}}</span>
+                    <span>{{item.type == 1?'农副产品':item.type==2?'能源产品':item.type==3?'金属':item.type==4?'化工产品':'建材产品'}}</span>
                     <img src="../../../assets/img/title.png" alt="">
                 </div>
                 <div class="info">
@@ -153,16 +153,16 @@
                                 <li v-for="item in item.latestData">
                                     <div class="name">
                                         <div>{{item.commodityName}}</div>
-                                        <div>库存：{{item.commodityStock}}吨</div>
+                                        <div>库存：{{item.commodityStock}}{{item.commoditySpecification}}</div>
                                     </div>
                                     <div class="count">
-                                        <span>{{item.commodityPrice}}</span> 元/吨
+                                        <span>{{item.commodityPrice}}</span> 元/{{item.commoditySpecification}}
                                     </div>
                                     <div class="warehouse">
                                         <div>发货/自提仓库：{{item.warehouseName}}</div>
                                         <div>供应商：{{item.supplierName}}</div>
                                     </div>
-                                    <div class="detail" @click="goodDetail">查看详情</div>
+                                    <div class="detail" @click="goodDetail(item)">查看详情</div>
                                 </li>
                             </ul>
                         </div>
@@ -474,10 +474,11 @@ export default {
         jump(id) {
             document.getElementById(id).scrollIntoView();
         },
-        goodDetail() {
+        goodDetail(item) {
+            console.log(444, item)
             var newPage = this.$router.resolve({
                 path: "/goodDetail",
-                params: { id: 12313131231 },
+                query: { commodityId: item.commodityId },
             });
             window.open(newPage.href, "_blank");
         },
@@ -537,7 +538,8 @@ export default {
             let { data } = await this.$api.goodtype();
         },
         toGood(item) {
-            this.$router.push({path: '/goods', query: {firstLevel: 111}})
+            console.log(2222, item)
+            this.$router.push({path: '/goods', query: {productType: this.typeMap[item.type], productTypeLevelTow:'全部', categoryId:item.type}})
             this.set_banerSelect('goods')
         },
         async selectCityList() {
@@ -606,7 +608,7 @@ export default {
             }
             let {data} = await this.$api.getGoodSList(obj)
             this.form[type-1].latestData = data.list
-             this.form[type-1].latestData.splice(4, this.form[type-1].latestData.length+1)
+            this.form[type-1].latestData.splice(4, this.form[type-1].latestData.length+1)
         },
     },
     computed: {
@@ -633,7 +635,7 @@ export default {
         window.addEventListener("scroll", this.handleScroll, true);
     },
     destroyed() {
-        window.removeEventListener("scroll", this.handleScroll);
+        window.removeEventListener("scroll", this.handleScroll, true);
     },
 };
 </script>

@@ -99,7 +99,7 @@
         </div>
         <div class="info">
           <div class="row">
-            <span>人口：</span><span class="big-number">108.24</span
+            <span>人口：</span><span class="big-number">108.37</span
             ><span style="margin-left: 5px">万人</span>
           </div>
           <div class="row">
@@ -132,8 +132,7 @@
           <video
             src="http://loading.spsict.com/chuanhuo_chuchuan/mvs/%E6%94%80%E6%9E%9D%E8%8A%B1%E9%92%9B%E9%93%81%E7%9F%BF.mp4"
             muted
-            autoplay
-            controls
+            poster="http://loading.spsict.com/chuanhuo_chuchuan/imgs/攀枝花钛铁矿.png"
           ></video>
           <div class="name">攀枝花館</div>
         </div>
@@ -162,10 +161,9 @@ export default {
       scLine,
       data: {},
       placeInfo: [
-        {name: '成都馆', renkou: '1608.24', gdp: '17010.13', brand: '食品、煤矿、水蜜桃、铁矿、钢材、枇杷、花岗岩、木材、食材'},
-        {name: '攀枝花馆', renkou: '108.24', gdp: '1010.13', brand: '钛白粉、钢轨、铁矿、炼焦煤'},
-        {name: '宜宾馆', renkou: '551.5', gdp: '2802.13', brand: '五粮液、川茶、丝丽雅、叙府大曲、天府龙芽、汽车'},
-        
+        {name: '成都馆', renkou: '1658.10', gdp: '17012.65', brand: '食品、煤矿、水蜜桃、铁矿、钢材、枇杷、花岗岩、木材、食材'},
+        {name: '攀枝花馆', renkou: '108.37', gdp: '1010.13', brand: '钛白粉、钢轨、铁矿、炼焦煤'},
+        {name: '宜宾馆', renkou: '551.5', gdp: '2802.12', brand: '五粮液、川茶、丝丽雅、叙府大曲、天府龙芽、汽车'},
       ]
     };
   },

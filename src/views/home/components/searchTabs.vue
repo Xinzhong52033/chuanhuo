@@ -69,7 +69,7 @@ export default {
                 化工产品: require("../../../assets/img/chemistry.png"),
                 建材产品: require("../../../assets/img/build.png"),
             },
-            activeName: 'home',
+            activeName: this.$store.state.activeName || 'home',
             typeMap:{
                 1: '农副',
                 2: '能源',
@@ -81,6 +81,7 @@ export default {
     },
     created() {
         this.selectGroupCategory();
+        this.activeName = this.banerSelect
     },
     mounted() {
         if(this.$route.path=='/home') {
@@ -108,8 +109,7 @@ export default {
             });
         },
         toGood(item) {
-            console.log(item)
-            this.$router.push({path: '/goods', query: {productType: this.typeMap[item.parentId],categoryId:item.parentId, productTypeLevelTow: item.categoryName}})
+            this.$router.push({path: '/goods', query: {methods: 'jump',productType: this.typeMap[item.parentId],categoryId:item.parentId, productTypeLevelTow: item.categoryName}})
             this.closeSelect()
             this.set_banerSelect('goods')
         },
@@ -129,7 +129,8 @@ export default {
         },
         closeSelect() {
             this.$refs.elSelect.blur()
-        }
+        },
+        
     },
 };
 </script>

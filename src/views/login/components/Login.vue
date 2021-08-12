@@ -58,7 +58,7 @@ export default {
     },
     methods:{
         ...mapMutations("login", ["changeloginName"]),
-        ...mapMutations(['set_name', 'set_status', 'set_type']),
+        ...mapMutations(['set_name', 'set_status', 'set_type', 'set_userId']),
         saveChange(e){
             if(e){
                 // this.changeData(this.formData);
@@ -73,12 +73,14 @@ export default {
             this.$refs.ruleForm.validate(async (res) => {
                 if (res) {
                     let {data} = await this.$api.login(this.formData);
+                    console.log(444, data)
                     if (data.result == true) {
                        this.$cookies.set('name',this.formData.name,-1) 
                        this.$message.success("登陆成功")
                        this.set_name(this.formData.name)
                        this.set_status(1)
                        this.set_type(data.code)
+                       this.set_userId(data.data.uId)
                        this.$router.push({path: '/home'})
                     } else {
                         this.$message.error(data.message);
