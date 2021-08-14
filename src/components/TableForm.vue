@@ -169,7 +169,6 @@ export default {
   methods: {
     addTableItem() {
       let str = clone(this.preData);
-      console.log(this.preData);
       for (let key in str) {
         str[key] = "";
       }
@@ -179,7 +178,6 @@ export default {
                   message: '亲，你添加的数据过多了！',
                   type: 'warning'
               });
-              console.log(10);
           }else {
               this.addJsonForm.params.push(str);
           }

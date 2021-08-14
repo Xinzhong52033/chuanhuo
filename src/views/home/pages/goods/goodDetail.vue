@@ -249,6 +249,9 @@ export default {
         async getGoodDetail(id) {
             let { data } = await this.$api.getGoodDetail({ commodityId: id });
             this.goodData = data;
+            if (this.goodData.commodityDetails.icon) {
+                this.goodsImg = this.goodData.commodityDetails.icon.split(',')
+            }
             this.activities = [];
             this.goodData.traceabilityList.forEach((item) => {
                 this.activities.push({
@@ -263,7 +266,7 @@ export default {
                                   `生产地点：${item.produceAddress}`,
                               ]
                             : [
-                                  `运输企业：${item.warehouseName || ""}`,
+                                  `运输企业：${item.transportName || ""}`,
                                   `运输方式：${item.transportManner}`,
                               ],
                     color: "#0bbd87",

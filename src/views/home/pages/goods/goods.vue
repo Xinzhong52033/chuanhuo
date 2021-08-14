@@ -200,7 +200,7 @@ export default {
                     select: "全部",
                 });
             });
-            console.log(6, this.type);
+            // console.log(6, this.type);
             this.$refs.selfFilter.checkHight();
         },
         async getGoodSList(pageNum) {

@@ -197,7 +197,7 @@ export const updateUserInfo = (param)=>{
 // 获取园区信息
 export const getParKInfo = (param)=>{
     return request({
-        url:'/park-server/parkController/selectOne',
+        url:'/sc-server/parkDetailsController/selectOne',
         method:'get',
         params:param
     })
@@ -213,7 +213,7 @@ export const getCompany = (param)=>{
     })
 }
 
-// 获取公司信息
+// 获取公司详细信息
 export const getCompanyDetail = (param)=>{
     return request({
         url:'/park-server/companyInfoController/selectOne',
@@ -222,4 +222,11 @@ export const getCompanyDetail = (param)=>{
     })
 }
 
-
+// 编辑商品
+export const editGood = (param)=>{
+    return request({
+        url:'/sc-server/commodityController/updateOrInsertCommodity',
+        method:'post',
+        data:param
+    })
+}

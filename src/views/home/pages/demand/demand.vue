@@ -225,7 +225,7 @@ export default {
                 item.total = total
                 item.wantList = wantList
             })
-            console.log(this.list.items)
+            // console.log(this.list.items)
         },
         selectlevelTwo() {
             this.getGoodSList(1)

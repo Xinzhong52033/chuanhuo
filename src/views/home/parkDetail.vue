@@ -178,10 +178,10 @@
                     <span class="underLine-title">推荐路线</span>
                 </div>
                 <div class="padding-box">
-                    <div class="card" v-for="item in 6" :key="item">
+                    <div class="card" v-for="item,  key in luxian" :key="key">
                         <div>
-                            <div class="bb">成都 ------ 北京</div>
-                            <div>铁路运输、公路运输</div>
+                            <div class="bb">{{item.from}}------ {{item.to}}</div>
+                            <div>{{item.methods}}</div>
                         </div>
                     </div>
                 </div>
@@ -324,6 +324,13 @@ export default {
                 {name: '及时雨物流'},
                 {name: '吉川物流'},
             ],
+            luxian: [
+                {from: "成都", to: '北京', methods: '铁路运输、公路运输' },
+                {from: "成都", to: '武汉', methods: '公路运输' },
+                {from: "成都", to: '广州', methods: '铁路运输、公路运输' },
+                {from: "成都", to: '深圳', methods: '铁路运输、公路运输' },
+                {from: "成都", to: '长沙', methods: '公路运输' },
+            ],
             dialogVisible: false,
             imgs: [
                 require("../../assets/img/cm01.png"),
@@ -460,7 +467,7 @@ export default {
         //    let { data } =  await axios.get(
         //         `http://192.168.130.126:10004/park-server/parkController/selectOne?id=${this.parkId}`
         //     );
-            let {data} = await this.$api.getParKInfo({parkId: this.parkId})
+            let {data} = await this.$api.getParKInfo({id: this.parkId})
             this.parkInfo = data
         },
         async getCompany() {
@@ -475,11 +482,10 @@ export default {
                 parkId: this.parkId
             }
             let {data} = await this.$api.getCompany(obj)
-            let what = data.data
-            this.list.total = what.total
-            this.list.pageNum = what.pageNum
-            this.list.pageSize = what.pageSize
-            this.list.items = what.list
+            this.list.total = data.total
+            this.list.pageNum = data.pageNum
+            this.list.pageSize = data.pageSize
+            this.list.items = data.list
         },
         handlePageSizeChange(pageSize) {
             this.pageSize = pageSize;
@@ -492,7 +498,7 @@ export default {
         async getCompanyDetail(id) {
             // let data = await axios.get(`http://192.168.130.126:9304/park-server/companyInfoController/selectOne?id=${id}`)
             let {data} = await this.$api.getCompanyDetail({id: id})
-            this.companyInfo = data.data
+            this.companyInfo = data
             this.company()
         }
     },
@@ -723,10 +729,11 @@ export default {
             padding: 40px;
             .padding-box {
                 margin-top: 40px;
-                .flexb();
+                .flex();
                 flex-wrap: wrap;
                 .card {
                     .wh(453px, 130px);
+                    margin: 0 13px;
                     border: 1px solid #e1e6f0;
                     background: url(../../assets/img/logisticsCompany.png);
                     background-size: 100% 100%;
@@ -854,7 +861,7 @@ export default {
         border-left: 1px solid #e1e6f0;
     }
     .tableheight {
-        height: 400px;
+        height: 560px;
         width: 100%;
         /deep/.data-table {
             height: 100%;

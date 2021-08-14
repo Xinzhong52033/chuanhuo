@@ -3,7 +3,7 @@
         <div class="padding-box">
             <div class="left-menu">
                 <div class="top">
-                    <img :src="icon || require('../../../../../assets/img/avatar.png')" alt="">
+                    <img :src="icon ? icon : require('@/assets/img/avatar.png')" alt="">
                     <span class="name">{{this.name}}</span>
                 </div>
                 <div class="menu">
@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         select(param) {
-            console.log(param)
+            // console.log(param)
             // this.$router.push({path: param.value})
         },
         selectItem(item) {

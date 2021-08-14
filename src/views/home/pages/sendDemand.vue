@@ -336,7 +336,6 @@ export default {
                     obj.demandDetails.expectTime.join(",");
             }
             obj.demandDetails.quotationRequest = obj.demandDetails.quotationRequest.join(',')
-            console.log(JSON.stringify(obj))
             await this.$api.sendDemand({id:JSON.stringify(obj)});
         },
     },

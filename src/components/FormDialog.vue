@@ -16,7 +16,8 @@
 </template>
 
 <script>
-let $widthCoefficient =  document.documentElement.clientWidth / 1920;
+// let $widthCoefficient =  document.documentElement.clientWidth / 1920;
+let $widthCoefficient =  1;
 export default {
     name: "FormDialog",
 
@@ -112,8 +113,9 @@ export default {
         border-radius: 6px 6px 0px 0px;
         .el-dialog__header {
             height: 70px;
-            background: linear-gradient(90deg, #5f87f8 0%, #3860f4 100%);
-            border-radius: 6px 6px 0px 0px;
+            background: url(../assets/img/baner.png);
+            background-size: 100% 100%;
+            border-radius: 4px 4px 0px 0px;
             padding: 0 50px;
             .bs();
         }

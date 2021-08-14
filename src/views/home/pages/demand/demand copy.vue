@@ -220,10 +220,10 @@ export default {
     methods: {
         handlePageSizeChange(pageSize) {
             this.pagesize = pageSize;
-            console.log(pageSize)
+            // console.log(pageSize)
         },
         handlePageChange(page) {
-            console.log(page)
+            // console.log(page)
         },
         checkDetail() {
             var newPage = this.$router.resolve({path: '/detail', params: {id: 12313131231}})

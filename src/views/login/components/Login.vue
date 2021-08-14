@@ -80,7 +80,7 @@ export default {
                        this.set_status(1)
                        this.set_type(data.code)
                        this.set_userId(data.data.uId)
-                       this.set_icon(data.data.icon)
+                       this.set_icon(data.data.icon?data.data.icon:'')
                        this.$router.push({path: '/home'})
                     } else {
                         this.$message.error(data.message);

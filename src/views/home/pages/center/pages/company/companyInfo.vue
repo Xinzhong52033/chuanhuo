@@ -120,13 +120,13 @@ export default {
             this.fileForm = new FormData();
             this.fileForm.append("file", fileObj);
             this.fileForm.append("type", "common");
-            console.log(3333, this.baseUrl)
+            // console.log(3333, this.baseUrl)
             let config = {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     // token: getToken(),
                 },
-                baseURL: 'http://192.168.130.126:9303/',
+                baseURL: 'http://139.155.81.36:9309/',
                 withCredentials: true,
             };
             // // 上传成功之前通过拦截显示加载状态

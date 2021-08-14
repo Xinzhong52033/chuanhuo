@@ -7,7 +7,7 @@
             <div @click="select = '已下架'" :class="select == '已下架' ? 'select' : ''">
                 已下架
             </div>
-            <el-button size="mini" type="primary" style="margin-left: auto">新增</el-button>
+            <el-button size="mini" type="primary" style="margin-left: auto" @click="openDialog">新增</el-button>
         </div>
         <div class="table">
             <DataTable style="width: 100%" :columns="tableColumns" :border="true" :data="list.items" :total="list.total">
@@ -15,7 +15,7 @@
                     <div class="option">
                         <div class="check button" @click="openDialog"><i class="iconfont icon-xiangqing"></i></div>
                         <div class="edit button" @click="openDialog"><i class="iconfont icon-bianji"></i></div>
-                        <div class="download button " @click="openDialog">
+                        <div class="download button" @click="openDialog">
                             <i class="iconfont icon-xiajia"></i>
                         </div>
                         <div class="delete button" @click="openDialog"><i class="iconfont icon-shanchu"></i></div>
@@ -30,12 +30,12 @@
                     <span>基础信息</span>
                 </div>
                 <div>
-                    <el-form-item label="商品图" prop='commodity.icon' class="imgrow"  :rules="{ required: true, message: '请上传图片', trigger: 'change'}">
+                    <el-form-item label="商品图" prop='commodityDetails.icon' class="imgrow" :rules="{ required: true, message: '请上传图片', trigger: 'change'}">
                         <div class="img-outer" v-for="(item, index) in imgs" :key='index'>
                             <img class="img" :src="item" alt="">
                             <i @click="deleteImg(index)" class="el-icon-remove delete"></i>
                         </div>
-                        <el-upload class="upload-demo" action="" :http-request="httpRequest" :before-upload="beforeUpload" :show-file-list="false">
+                        <el-upload v-if="imgs.length < 4" class="upload-demo" action="" :http-request="httpRequest" :before-upload="beforeUpload" :show-file-list="false">
                             <span class="add-img img">
                                 <i class="el-icon-plus"></i>
                             </span>
@@ -44,33 +44,33 @@
                     </el-form-item>
                 </div>
                 <div class="row">
-                    <el-form-item label="商品名"  prop="commodity.commodityName" :rules="{ required: true, message: '请输入商品名', trigger: 'blur'}">
-                        <el-input v-model="form.commodity.commodityName" ></el-input>
+                    <el-form-item label="商品名" prop="commodity.commodityName" :rules="{ required: true, message: '请输入商品名', trigger: 'blur'}">
+                        <el-input v-model="form.commodity.commodityName"></el-input>
                     </el-form-item>
                     <el-form-item label="价格（元）" prop="commodityDetails.commodityPrice" :rules="{ required: true, message: '请输入', trigger: 'blur'}">
-                        <el-input  style="width:" v-model="form.commodityDetails.commodityPrice" >
+                        <el-input style="width:" v-model="form.commodityDetails.commodityPrice">
                         </el-input>
                     </el-form-item>
-                    <el-form-item label="提货方式">
+                    <el-form-item label="提货方式" prop="commodityDetails.shoppingIdeas" :rules="{ required: true, message: '请选择提货方式', trigger: 'blur'}">
                         <el-select v-model="form.commodityDetails.shoppingIdeas" placeholder="请选择" style="width: 100%">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in shoppingIdeasOptions" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
                     </el-form-item>
                 </div>
                 <div class="row">
-                    <el-form-item label="交易方式">
+                    <!-- <el-form-item label="交易方式">
                         <el-select v-model="form.commodityDetails.meansTransaction" placeholder="请选择" style="width: 100%">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in meansTransactionOptions" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="支付方式">
                         <el-select v-model="form.commodityDetails.paymentMethod" placeholder="请选择" style="width: 100%">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in paymentMethodOptions" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item label="库存">
                         <el-input v-model="form.commodityDetails.commodityStock"></el-input>
                     </el-form-item>
@@ -80,20 +80,24 @@
                     <span>商品参数</span>
                 </div>
                 <div class="row">
-                    <el-form-item label="商品大类">
-                        <el-input v-model="form.commodity.categoryId"></el-input>
+                    <el-form-item label="商品类目" prop="commodity.categoryId" :rules="{ required: true, message: '请选择类目', trigger: 'change' }">
+                        <el-cascader style="width: 100%" v-model="form.commodity.categoryId" :options="selectGroup" :props="props" clearable=""></el-cascader>
                     </el-form-item>
-                    <el-form-item label="品牌">
+                    <el-form-item label="品牌" prop="commodityDetails.commodityBrand" :rules="{ required: true, message: '请填写商品品牌', trigger: 'blur' }">
                         <el-input v-model="form.commodityDetails.commodityBrand"></el-input>
                     </el-form-item>
-                    <el-form-item label="地区">
-                        <el-cascader clearable="" v-model="form.commodityDetails.commodityArea" style="width: 100%" :options="options2" @change="handleChange"></el-cascader>
+                    <el-form-item label="地区" prop="commodityDetails.commodityArea" :rules="{ required: true, message: '请选择地区', trigger: 'change' }">
+                        <!-- <el-cascader clearable="" v-model="form.commodityDetails.commodityArea" style="width: 100%" :options="options2" @change="handleChange"></el-cascader> -->
+                        <el-select style="width: 100%" v-model="form.commodityDetails.commodityArea" placeholder="请选择">
+                            <el-option v-for="item, i in cityList" :label="item" :value="item" :key="i+'city'">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </div>
                 <div class="row">
-                    <el-form-item label="规格">
+                    <el-form-item label="规格" prop="commodityDetails.commoditySpecification" :rules="{ required: true, message: '请选择规格', trigger: 'change' }">
                         <el-select v-model="form.commodityDetails.commoditySpecification" placeholder="请选择" style="width: 100%">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in unit" :key="item.value" :label="item.value" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -110,32 +114,26 @@
                     <span>仓库信息</span>
                 </div>
                 <div class="row">
-                    <el-form-item label="仓库名称">
+                    <el-form-item label="仓库名称" prop="warehouseDetails.warehouseName" :rules="{ required: true, message: '请填写仓库名称', trigger: 'blur' }">
                         <el-input v-model="form.warehouseDetails.warehouseName"></el-input>
                     </el-form-item>
                     <el-form-item label="面积">
                         <el-input v-model="form.warehouseDetails.warehouseSize"></el-input>
                     </el-form-item>
                     <el-form-item label="类型">
-                        <el-cascader clearable="" v-model="form.warehouseDetails.warehouseType" style="width: 100%" :options="options2" @change="handleChange"></el-cascader>
+                        <el-input v-model="form.warehouseDetails.warehouseType"></el-input>
                     </el-form-item>
                 </div>
                 <div class="row">
-                     <!-- 无字段 -->
+                    <!-- 无字段 -->
                     <el-form-item label="服务商">
-                        <el-input v-model="form.warehouseDetails.warehouseType"></el-input>
+                        <el-input v-model="form.warehouseDetails.warehouseServe"></el-input>
                     </el-form-item>
                     <el-form-item label="联系人">
-                        <el-select v-model="form.warehouseDetails.warehouseAdministrator" placeholder="请选择" style="width: 100%">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-                        </el-select>
+                         <el-input v-model="form.warehouseDetails.warehouseAdministrator"></el-input>
                     </el-form-item>
                     <el-form-item label="联系电话">
-                        <el-select v-model="form.warehouseDetails.administratorPhone" placeholder="请选择" style="width: 100%">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-                        </el-select>
+                        <el-input v-model="form.warehouseDetails.administratorPhone"></el-input>
                     </el-form-item>
                 </div>
                 <div class="row">
@@ -146,7 +144,7 @@
                 <div class="info-title">
                     <div class="square"></div>
                     <span>商品参数</span>
-                    <div class="button" style="padding: 0 5px">添加节点</div>
+                    <div class="button" style="padding: 0 5px" @click="addOne">添加节点</div>
                 </div>
                 <div class="sec-title">
                     <div class="sec-title-name">产地信息</div>
@@ -155,30 +153,25 @@
                 <!-- 无字段 -->
                 <div class="row">
                     <el-form-item label="公司名称">
-                        <el-input v-model="form.psd"></el-input>
+                        <el-input v-model="form.productCompany.companyName"></el-input>
                     </el-form-item>
                     <el-form-item label="联系人">
-                        <el-select v-model="value" placeholder="请选择" style="width: 100%">
+                        <el-select v-model="form.productCompany.contactPerson" placeholder="请选择" style="width: 100%">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="联系电话">
-                        <el-select v-model="value" placeholder="请选择" style="width: 100%">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-                        </el-select>
+                        <el-input v-model="form.productCompany.contactNumber"></el-input>
+                        
                     </el-form-item>
                 </div>
                 <div class="row">
                     <el-form-item label="公司注册地区">
-                        <el-input v-model="form.psd"></el-input>
+                        <el-cascader v-model="form.productCompany.ad" :options="areaJson" style="width:100%"></el-cascader>
                     </el-form-item>
                     <el-form-item label="详细地址">
-                        <el-select v-model="value" placeholder="请选择" style="width: 100%">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-                        </el-select>
+                        <el-input v-model="form.productCompany.address"></el-input>
                     </el-form-item>
                 </div>
             </el-form>
@@ -188,52 +181,53 @@
             </div>
             <el-form ref="form2" :model="form" label-position="left" label-width="80px" size="medium" :inline='true' class="demo-form-inline">
                 <el-timeline style="margin-top: 20px">
-                    <el-timeline-item type="success">
+                    <el-timeline-item type="success" v-for="h, j in form.traceabilityList" :key="j+'node'">
                         <div class="row-leftlabel">
                             <el-form-item label="选择节点">
-                                <el-input v-model="form.psd" style="width: 300px"></el-input>
+                                <el-select v-model="h.nodeId" placeholder="请选择" style="width: 300px">
+                                    <el-option v-for="item in node" :key="item.value" :label="item.name" :value="item.value">
+                                    </el-option>
+                                </el-select>
                             </el-form-item>
                             <el-form-item label="时间">
-                                <el-select v-model="value" placeholder="请选择" style="width: 300px">
-                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
+                                <el-date-picker v-model="h.time" value-format="yyyy-MM-dd" style="width: 300px"  type="date" placeholder="选择日期">
+                            </el-date-picker>
                             </el-form-item>
+                             <i @click="deleteOne(j)" class="el-icon-remove delete"></i>
                         </div>
-                        <div class="row-leftlabel">
+                        <div class="row-leftlabel" v-if="h.nodeId == 0">
                             <el-form-item label="仓库">
-                                <el-input v-model="form.psd" style="width: 300px"></el-input>
+                                <el-input v-model="h.warehouseName" style="width: 300px"></el-input>
                             </el-form-item>
                             <el-form-item label="备注">
-                                <el-select v-model="value" placeholder="请选择" style="width: 300px">
-                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
+                                <el-input v-model="h.remarks" style="width: 300px"></el-input>
                             </el-form-item>
                         </div>
-                    </el-timeline-item>
-                    <el-timeline-item type="success">
-                        <div class="row-leftlabel">
-                            <el-form-item label="选择节点">
-                                <el-input v-model="form.psd" style="width: 300px"></el-input>
+                        <div class="row-leftlabel" v-if="h.nodeId == 1">
+                            <el-form-item label="运输企业">
+                                <el-input v-model="h.transportName" style="width: 300px"></el-input>
                             </el-form-item>
-                            <el-form-item label="时间">
-                                <el-select v-model="value" placeholder="请选择" style="width: 300px">
-                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <el-form-item label="运输方式">
+                                <el-select v-model="h.transportManner" placeholder="请选择" style="width: 300px">
+                                    <el-option v-for="item in transportManner" :key="item" :label="item" :value="item">
                                     </el-option>
                                 </el-select>
-                            </el-form-item>
-                        </div>
-                        <div class="row-leftlabel">
-                            <el-form-item label="仓库">
-                                <el-input v-model="form.psd" style="width: 300px"></el-input>
                             </el-form-item>
                             <el-form-item label="备注">
-                                <el-select v-model="value" placeholder="请选择" style="width: 300px">
-                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
+                                <el-input v-model="h.remarks" style="width: 300px"></el-input>
                             </el-form-item>
+                        </div>
+                        <div class="row-leftlabel" v-if="h.nodeId == 2">
+                            <el-form-item label="生产企业">
+                                <el-input v-model="h.produceName" style="width: 300px"></el-input>
+                            </el-form-item>
+                            <el-form-item label="生产地点">
+                                <el-input v-model="h.produceAddress" style="width: 300px"></el-input>
+                            </el-form-item>
+                            <el-form-item label="备注">
+                                <el-input v-model="h.remarks" style="width: 300px"></el-input>
+                            </el-form-item>
+                           
                         </div>
                     </el-timeline-item>
                 </el-timeline>
@@ -245,14 +239,15 @@
 <script>
 import DataTable from "@/components/DataTable.vue";
 import FormDialog from "@/components/FormDialog.vue";
+import areaJson from "@/assets/json/AreaJson";
 let $widthCoefficient = document.documentElement.clientWidth / 1920;
 import axios from "axios";
 const tableColumns = [
     {
         title: "编号",
         align: "center",
-        name: "index",
-        width: 50 * $widthCoefficient + "px",
+        type: "index",
+        width: 50  + "px",
         showOverflow: true,
     },
     {
@@ -262,58 +257,59 @@ const tableColumns = [
         showOverflow: true,
     },
     {
-        title: "库存(吨)",
+        title: "库存",
         align: "center",
         name: "capital",
-        width: 100 * $widthCoefficient + "px",
+        width: 60  + "px",
         showOverflow: true,
     },
     {
         title: "发货/自提仓库",
         align: "center",
         name: "send",
-        width: 120 * $widthCoefficient + "px",
+        width: 120  + "px",
         showOverflow: false,
     },
     {
         title: "价格",
         align: "center",
         name: "price",
+        width: 60  + "px",
         showOverflow: true,
     },
     {
         title: "浏览量",
         align: "center",
         name: "watch",
-        width: 100 * $widthCoefficient + "px",
+        width: 70 + "px",
         showOverflow: true,
     },
     {
         title: "联系人",
         align: "center",
         name: "concact",
-        width: 120 * $widthCoefficient + "px",
+        width: 70,
         showOverflow: true,
     },
     {
         title: "联系电话",
         align: "center",
         name: "phone",
-        width: 120 * $widthCoefficient + "px",
+        width: 120 + "px",
         showOverflow: true,
     },
     {
         title: "创建日期",
         align: "center",
         name: "time",
-        width: 100 * $widthCoefficient + "px",
+        width: 100 + "px",
         showOverflow: false,
     },
     {
         title: "操作",
         align: "center",
         name: "__slot:option",
-        width: 200 * $widthCoefficient + "px",
+        width: 200  + "px",
         showOverflow: true,
     },
 ];
@@ -326,332 +322,105 @@ export default {
     },
     data() {
         return {
-            options2: [
+            props: {
+                value: "categoryId",
+                label: "categoryName",
+                children: "list",
+            },
+            transportManner: [
+                '火车','货车','水运','空运','其他',
+            ],
+            node:[
+                {name:'仓储信息' , value: '0' },
+                {name:'运输信息' , value: '1' },
+                {name:'生产信息' , value: '2' }
+            ],
+            selectGroup: [],
+            shoppingIdeasOptions: ["仓库包出", "买家自提", "其他"],
+            meansTransactionOptions: ["全款现货"],
+            paymentMethodOptions: ["网银转账"],
+            areaJson,
+            unit: [
                 {
-                    value: "zhinan",
-                    label: "指南",
-                    children: [
-                        {
-                            value: "shejiyuanze",
-                            label: "设计原则",
-                            children: [
-                                {
-                                    value: "yizhi",
-                                    label: "一致",
-                                },
-                                {
-                                    value: "fankui",
-                                    label: "反馈",
-                                },
-                                {
-                                    value: "xiaolv",
-                                    label: "效率",
-                                },
-                                {
-                                    value: "kekong",
-                                    label: "可控",
-                                },
-                            ],
-                        },
-                        {
-                            value: "daohang",
-                            label: "导航",
-                            children: [
-                                {
-                                    value: "cexiangdaohang",
-                                    label: "侧向导航",
-                                },
-                                {
-                                    value: "dingbudaohang",
-                                    label: "顶部导航",
-                                },
-                            ],
-                        },
-                    ],
+                    value: "吨",
                 },
                 {
-                    value: "zujian",
-                    label: "组件",
-                    children: [
-                        {
-                            value: "basic",
-                            label: "Basic",
-                            children: [
-                                {
-                                    value: "layout",
-                                    label: "Layout 布局",
-                                },
-                                {
-                                    value: "color",
-                                    label: "Color 色彩",
-                                },
-                                {
-                                    value: "typography",
-                                    label: "Typography 字体",
-                                },
-                                {
-                                    value: "icon",
-                                    label: "Icon 图标",
-                                },
-                                {
-                                    value: "button",
-                                    label: "Button 按钮",
-                                },
-                            ],
-                        },
-                        {
-                            value: "form",
-                            label: "Form",
-                            children: [
-                                {
-                                    value: "radio",
-                                    label: "Radio 单选框",
-                                },
-                                {
-                                    value: "checkbox",
-                                    label: "Checkbox 多选框",
-                                },
-                                {
-                                    value: "input",
-                                    label: "Input 输入框",
-                                },
-                                {
-                                    value: "input-number",
-                                    label: "InputNumber 计数器",
-                                },
-                                {
-                                    value: "select",
-                                    label: "Select 选择器",
-                                },
-                                {
-                                    value: "cascader",
-                                    label: "Cascader 级联选择器",
-                                },
-                                {
-                                    value: "switch",
-                                    label: "Switch 开关",
-                                },
-                                {
-                                    value: "slider",
-                                    label: "Slider 滑块",
-                                },
-                                {
-                                    value: "time-picker",
-                                    label: "TimePicker 时间选择器",
-                                },
-                                {
-                                    value: "date-picker",
-                                    label: "DatePicker 日期选择器",
-                                },
-                                {
-                                    value: "datetime-picker",
-                                    label: "DateTimePicker 日期时间选择器",
-                                },
-                                {
-                                    value: "upload",
-                                    label: "Upload 上传",
-                                },
-                                {
-                                    value: "rate",
-                                    label: "Rate 评分",
-                                },
-                                {
-                                    value: "form",
-                                    label: "Form 表单",
-                                },
-                            ],
-                        },
-                        {
-                            value: "data",
-                            label: "Data",
-                            children: [
-                                {
-                                    value: "table",
-                                    label: "Table 表格",
-                                },
-                                {
-                                    value: "tag",
-                                    label: "Tag 标签",
-                                },
-                                {
-                                    value: "progress",
-                                    label: "Progress 进度条",
-                                },
-                                {
-                                    value: "tree",
-                                    label: "Tree 树形控件",
-                                },
-                                {
-                                    value: "pagination",
-                                    label: "Pagination 分页",
-                                },
-                                {
-                                    value: "badge",
-                                    label: "Badge 标记",
-                                },
-                            ],
-                        },
-                        {
-                            value: "notice",
-                            label: "Notice",
-                            children: [
-                                {
-                                    value: "alert",
-                                    label: "Alert 警告",
-                                },
-                                {
-                                    value: "loading",
-                                    label: "Loading 加载",
-                                },
-                                {
-                                    value: "message",
-                                    label: "Message 消息提示",
-                                },
-                                {
-                                    value: "message-box",
-                                    label: "MessageBox 弹框",
-                                },
-                                {
-                                    value: "notification",
-                                    label: "Notification 通知",
-                                },
-                            ],
-                        },
-                        {
-                            value: "navigation",
-                            label: "Navigation",
-                            children: [
-                                {
-                                    value: "menu",
-                                    label: "NavMenu 导航菜单",
-                                },
-                                {
-                                    value: "tabs",
-                                    label: "Tabs 标签页",
-                                },
-                                {
-                                    value: "breadcrumb",
-                                    label: "Breadcrumb 面包屑",
-                                },
-                                {
-                                    value: "dropdown",
-                                    label: "Dropdown 下拉菜单",
-                                },
-                                {
-                                    value: "steps",
-                                    label: "Steps 步骤条",
-                                },
-                            ],
-                        },
-                        {
-                            value: "others",
-                            label: "Others",
-                            children: [
-                                {
-                                    value: "dialog",
-                                    label: "Dialog 对话框",
-                                },
-                                {
-                                    value: "tooltip",
-                                    label: "Tooltip 文字提示",
-                                },
-                                {
-                                    value: "popover",
-                                    label: "Popover 弹出框",
-                                },
-                                {
-                                    value: "card",
-                                    label: "Card 卡片",
-                                },
-                                {
-                                    value: "carousel",
-                                    label: "Carousel 走马灯",
-                                },
-                                {
-                                    value: "collapse",
-                                    label: "Collapse 折叠面板",
-                                },
-                            ],
-                        },
-                    ],
+                    value: "件",
                 },
                 {
-                    value: "ziyuan",
-                    label: "资源",
-                    children: [
-                        {
-                            value: "axure",
-                            label: "Axure Components",
-                        },
-                        {
-                            value: "sketch",
-                            label: "Sketch Templates",
-                        },
-                        {
-                            value: "jiaohu",
-                            label: "组件交互文档",
-                        },
-                    ],
+                    value: "个",
+                },
+                {
+                    value: "台",
+                },
+                {
+                    value: "箱",
+                },
+                {
+                    value: "套",
+                },
+                {
+                    value: "米",
                 },
             ],
             form: {
                 commodity: {
-                    commodityId: "",
                     categoryId: "",
+                    commodityId: "",
                     commodityName: "",
-                    pageviews: "",
-                    commodityLabel: "",
-                    commodityDesc: "",
-                    userId: "",
-                    commodityStatus: "",
-                    createTime: "",
-                    isDelete: "",
-                    deleteTime: "",
-                    icon:'',
+                    userId: this.$store.state.userId, // 公司id
                 },
                 commodityDetails: {
-                    commodityId: "",
-                    shoppingIdeas: "",
-                    meansTransaction: "",
-                    paymentMethod: "",
-                    commodityStock: "",
-                    commodityPrice: "",
-                    userId: "",
                     commodityArea: "",
                     commodityBrand: "",
-                    commoditySpecification: "",
-                    warehouseId: "",
-                    traceabilityId: "",
-                    evaluationId: "",
+                    commodityId: "",
+                    commodityPrice: "",
+                    commoditySpecification: "吨",
+                    commodityStock: "",
+                    icon: "",
+                    meansTransaction: "",
+                    paymentMethod: "",
+                    shoppingIdeas: "",
+                    userId: this.$store.state.userId,
+                    // warehouseId: "1",
                 },
                 warehouseDetails: {
-                    warehouseId: "",
-                    warehouseName: "",
+                    administratorPhone: "",
                     warehouseAddress: "",
                     warehouseAdministrator: "",
-                    administratorPhone: "",
-                    createTime: "",
-                    isDelete: "",
-                    deleteTime: "",
-                    warehouseType: "",
+                    warehouseName: "",
                     warehouseSize: "",
+                    warehouseType: "",
+                    warehouseServe: "",
+                    warehouseId:"",
                 },
-                productTraceability: [
+                traceabilityList: [
                     {
+                        commodityId: "",
                         nodeId: "",
-                        orderNum: "",
-                        nodeType: "0",
-                        produceName: "",
-                        transportName: "",
-                        warehouseName: "",
-                        remarks: "",
+                        nodeType: "",
+                        orderNum: 0,
+                        produceAddress: "",
+                        produceName: '',
+                        remarks: '',
                         time: "",
                         transportManner: "",
-                        produceAddress: "",
-                        createTime: "",
-                        commodityId: "",
+                        transportName: '',
+                        warehouseName: "",
                     },
                 ],
+                productCompany: {
+                    address: "",
+                    ad: [],
+                    area: "",
+                    city: "",
+                    companyName: "",
+                    contactNumber: "",
+                    contactPerson: "",
+                    id: "",
+                    province: "",
+                    street: "",
+                },
             },
             select: "已上架",
             list: {
@@ -812,32 +581,71 @@ export default {
                 },
             ],
             value: "",
+            cityList: "",
         };
     },
     computed: {
         imgs() {
-            if (this.form.icon) {
-                return this.form.icon.split(",");
+            if (this.form.commodityDetails.icon) {
+                return this.form.commodityDetails.icon.split(",");
             } else {
                 return [];
             }
         },
     },
+    created() {
+        this.selectGroupCategory();
+        this.selectCityList();
+    },
     methods: {
+        async editGood() {
+            // console.log(333, obj)
+
+        },
+        addOne() {
+            this.form.traceabilityList.push({
+                commodityId: "",
+                nodeId: "0",
+                nodeType: "仓储信息",
+                orderNum: 0,
+                produceAddress: "",
+                produceName: "",
+                remarks: "",
+                time: "",
+                transportManner: "",
+                transportName: "",
+                warehouseName: "",
+            });
+        },
+        deleteOne(index) {
+            this.form.traceabilityList.splice(index, 1)
+        },
+        async selectCityList() {
+            let { data } = await this.$api.selectCityList();
+            this.cityList = data;
+        },
+        async selectGroupCategory() {
+            let { data } = await this.$api.selectGroupCategory();
+            this.selectGroup = data;
+        },
         openDialog() {
             this.$refs.dialog.show = true;
         },
         handleChange() {},
         deleteImg(index) {
-            let arr = this.form.icon.split(",");
+            let arr = this.form.commodityDetails.icon.split(",");
             arr.splice(index, 1);
-            this.form.icon = arr.join(",");
+            this.form.commodityDetails.icon = arr.join(",");
         },
         // 上传前验证
         beforeUpload(file) {
             var testmsg = /^(jpg|png)$/.test(file.name.split(".").pop());
             if (!testmsg) {
                 this.$message.error("图片格式不正确");
+                return false;
+            }
+            if(file.size/1024/1024 > 5) {
+                this.$message.error("图片过大");
                 return false;
             }
             return testmsg;
@@ -853,15 +661,19 @@ export default {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
-                baseURL: "http://192.168.130.126:9303/",
+                baseURL: "http://139.155.81.36:9309/",
                 withCredentials: true,
             };
             axios
                 .post("/sc-server/file/img/upload", this.fileForm, config)
                 .then(async (res) => {
                     if (res.data.code == 1) {
-                        // 表单添加头像地址
-                        this.userForm.icon = res.data.data.value;
+                        let temp = this.form.commodityDetails.icon
+                            ? this.form.commodityDetails.icon.split(",")
+                            : [];
+                        temp.push(res.data.data.value);
+                        // 添加图片
+                        this.form.commodityDetails.icon = temp.join(",");
                     } else if (res.data.code == -4) {
                         // MSG.errorMsg(res.data.msg);
                         // router.push({ path: "/login" });
@@ -875,12 +687,19 @@ export default {
         editProduct() {
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
-                    await this.$api.updateUserInfo(this.userForm);
+                    let obj = JSON.parse(JSON.stringify(this.form))
+                    obj.productCompany.ad.forEach(e => {
+                        obj.productCompany.province =  obj.productCompany.ad[0]
+                        obj.productCompany.city = obj.productCompany.ad[1]
+                        obj.productCompany.area = obj.productCompany.ad[2]
+                    });
+                    obj.commodity.categoryId = obj.commodity.categoryId[1]
+                    await this.$api.editGood({id: JSON.stringify(obj)})
                     this.$message({
                         message: "商品添加成功",
                         type: "success",
                     });
-                    this.$refs.psdDialog.show = false;
+                    this.$refs.dialog.show = false;
                 } else {
                     this.$message.error("请填写完整");
                     return false;
@@ -962,26 +781,27 @@ export default {
                 width: 60px;
                 height: 60px;
                 position: relative;
-                border: 1px solid #e1e6f0;
+
                 .bs();
                 margin-right: 10px;
                 i {
                     font-size: 18px;
-                    opacity: 0.8;
+                    opacity: 1;
                     color: #ff5d6c;
                     cursor: pointer;
                     &:hover {
-                        opacity: 0.5;
+                        opacity: 0.7;
                     }
                     position: absolute;
-                    top: 2px;
-                    right: 2px;
+                    top: -4px;
+                    right: -4px;
                 }
             }
             .img {
                 width: 60px;
                 height: 60px;
                 background: #ffffff;
+                border: 1px solid #e1e6f0;
                 opacity: 1;
                 .bs();
             }
@@ -1048,6 +868,18 @@ export default {
                     margin-right: 50px;
                 }
             }
+            i {
+                font-size: 20px;
+                color: rgba(255, 93, 108, 1);
+                position: absolute;
+                top: 8px;
+                right: 130px;
+                cursor: pointer;
+                &:hover {
+                    opacity: 0.5;
+                }
+            }
+            position: relative
         }
     }
     .sec-title {

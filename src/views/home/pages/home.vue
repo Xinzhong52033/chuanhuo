@@ -67,7 +67,7 @@
                             <div class="left-top">
                                 <div class="left-top-left">
                                     <span class="ball"></span>
-                                    <span>6月6日农副指数：</span>
+                                    <span>6月6日 农副指数：</span>
                                     <span class="yellow">944</span>
                                 </div>
                                 <div class="left-top-right">
@@ -108,7 +108,7 @@
                                                     <div class="number" :class="i.zf==0?'number-down':''"><span v-if='i.zf == 1'>+ </span><span v-if='i.zf == 0'>- </span>{{i.increase}}%</div>
                                                 </div>
                                                 <div class="down" style="background: transparent">
-                                                    <span class="big-number">{{i.price}}</span><span> 元/吨</span>
+                                                    <span class="big-number">{{i.price}}</span><span> {{i.unit}}</span>
                                                 </div>
                                             </div>
                                         </swiper-slide>
@@ -475,7 +475,6 @@ export default {
             document.getElementById(id).scrollIntoView();
         },
         goodDetail(item) {
-            console.log(444, item)
             var newPage = this.$router.resolve({
                 path: "/goodDetail",
                 query: { commodityId: item.commodityId },
@@ -538,7 +537,6 @@ export default {
             let { data } = await this.$api.goodtype();
         },
         toGood(item) {
-            console.log(2222, item)
             this.$router.push({path: '/goods', query: {productType: this.typeMap[item.type], productTypeLevelTow:'全部', categoryId:item.type}})
             this.set_banerSelect('goods')
         },
@@ -571,11 +569,7 @@ export default {
             this.form[type-1].priceData = this.form[type-1].priceDatas['成都']
         },
         selectItem(item, datas, data, value) {
-            console.log(item, datas, data, value)
-            console.log(item[data], item[datas], data, value)
-            console.log( item[data], item[datas][value])
             item[data] = item[datas][value]
-            console.log(item, datas, data, value)
         }, 
         async getStock(type) {
            let { data } = await this.$api.getInventory({

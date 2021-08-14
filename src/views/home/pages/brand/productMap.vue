@@ -231,14 +231,13 @@ export default {
             let { data } = await axios.get(
                 "http://loading.spsict.com/china_maps/510100.json"
             );
-            console.log(1111, mapStatefun(data));
         },
         chartOver(param) {
-            console.log("地图移动到", param);
+            // console.log("地图移动到", param);
             this.detail = true;
         },
         chartOut(param) {
-            console.log("移出");
+            // console.log("移出");
             this.detail = false;
         },
         chartClick(param) {
